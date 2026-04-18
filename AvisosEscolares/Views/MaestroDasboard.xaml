@@ -1,0 +1,115 @@
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="AvisosEscolares.Views.MaestroDasboard"
+             Shell.NavBarIsVisible="False"
+             BackgroundColor="#E6E6E6">
+
+    <VerticalStackLayout Padding="20" Spacing="40">
+
+        <!-- HEADER -->
+        <Border StrokeShape="RoundRectangle 15"
+                BackgroundColor="#5B3F99">
+
+            <Grid RowDefinitions="Auto,Auto"
+                  ColumnDefinitions="*,Auto">
+
+                <!-- TÍTULO -->
+                <Label
+                    Grid.Row="0"
+                    Grid.ColumnSpan="2"
+                    Text="GESTION AVISOS ESCOLARES"
+                    BackgroundColor="#3D2A63"
+                    TextColor="White"
+                    FontAttributes="Bold"
+                    HorizontalTextAlignment="Center"
+                    Padding="18"
+                    FontSize="16"/>
+
+                <!-- CONTENIDO -->
+                <VerticalStackLayout
+                    Grid.Row="1"
+                    Grid.Column="0"
+                    Padding="18,15"
+                    Spacing="3">
+
+                    <Label HorizontalTextAlignment="Center" TextColor="White" FontSize="16">
+                        <Label.FormattedText>
+                            <FormattedString>
+                                <Span Text="BIENVENIDO " FontAttributes="Bold"/>
+                                <Span Text="{Binding maestro.Nombre}"
+                                      FontAttributes="Bold"
+                                      TextTransform="Uppercase"/>
+                            </FormattedString>
+                        </Label.FormattedText>
+                    </Label>
+
+                    <Label
+                        Text="{Binding maestro.GrupoNombre}"
+                        TextColor="White"
+                        FontAttributes="Bold"
+                        FontSize="16"/>
+                </VerticalStackLayout>
+
+                <!-- ICONO -->
+                <Image
+                    Grid.Row="1"
+                    Grid.Column="1"
+                    Source="logout.png"
+                    WidthRequest="26"
+                    HeightRequest="26"
+                    Margin="0,0,18,0"
+                    VerticalOptions="Center"/>
+
+            </Grid>
+        </Border>
+
+        <!-- BOTÓN -->
+        <Border StrokeShape="RoundRectangle 20"
+                BackgroundColor="#5B3F99"
+                HeightRequest="65"
+                Padding="20,0">
+
+            <Border.GestureRecognizers>
+                <TapGestureRecognizer Command="{Binding VerListaAlumnosCommand}" />
+            </Border.GestureRecognizers>
+
+            <HorizontalStackLayout Spacing="20"
+                                   VerticalOptions="Center">
+
+                <Image Source="users.png" WidthRequest="32"/>
+
+                <Label
+                    Text="LISTA DE ALUMNOS"
+                    TextColor="White"
+                    FontAttributes="Bold"
+                    FontSize="16"
+                    VerticalOptions="Center"/>
+            </HorizontalStackLayout>
+        </Border>
+
+        <!-- BOTÓN -->
+        <Border StrokeShape="RoundRectangle 20"
+                BackgroundColor="#5B3F99"
+                HeightRequest="65"
+                Padding="20,0">
+
+            <Border.GestureRecognizers>
+                <TapGestureRecognizer Command="{Binding MostrarAvisosGeneralesMaestroCommand}" />
+            </Border.GestureRecognizers>
+
+            <HorizontalStackLayout Spacing="20"
+                                   VerticalOptions="Center">
+
+                <Image Source="message.png" WidthRequest="32"/>
+
+                <Label
+                    Text="AVISOS GENERALES"
+                    TextColor="White"
+                    FontAttributes="Bold"
+                    FontSize="16"
+                    VerticalOptions="Center"/>
+            </HorizontalStackLayout>
+        </Border>
+
+    </VerticalStackLayout>
+</ContentPage>

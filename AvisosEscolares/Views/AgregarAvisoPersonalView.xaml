@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="AvisosEscolares.Views.AgregarAvisoPersonalView"
+             Title="AgregarAvisoPersonalView">
+    <VerticalStackLayout>
+        <Label Text="Titulo"/>
+        <Entry Text="{Binding NuevoAvisoPersonal.Titulo}"/>
+        <Label Text="Mensaje"/>
+        <Editor Text="{Binding NuevoAvisoPersonal.Mensaje}" HeightRequest="100"/>
+        
+       
+
+        <Button Text="Guardar" Command="{Binding CrearAvisoPersonalCommand}"/>
+    </VerticalStackLayout>
+</ContentPage>

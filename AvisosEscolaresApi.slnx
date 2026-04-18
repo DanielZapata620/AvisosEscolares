@@ -1,0 +1,4 @@
+<Solution>
+  <Project Path="AvisosEscolares/AvisosEscolares.csproj" Id="acc8563c-2441-496a-93f1-629dc5e6da84" />
+  <Project Path="AvisosEscolaresApi/AvisosEscolaresApi.csproj" />
+</Solution>
