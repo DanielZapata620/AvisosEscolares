@@ -15,6 +15,8 @@ namespace AvisosEscolares.Viewmodels
         public LoginDTO LoginDTO { get; set; } = new LoginDTO();
 
         public ObservableCollection<AvisoGeneralDetallesMaestroDTO> AvisosGenerales { get; set; } = new();
+
+        public ObservableCollection<AvisoPersonalDetallesMaestroDTO> AvisosPersonales { get; set; } = new();
         public ObservableCollection<AlumnoDetallesListaDTO> ListaAlumnos { get; set; } = new();
 
         public MaestroDTO maestro { get; set; }
@@ -23,7 +25,7 @@ namespace AvisosEscolares.Viewmodels
         public CrearAvisoGeneralDto NuevoAvisoGeneral { get; set; } = new CrearAvisoGeneralDto();
         public CrearAvisoPersonalDto NuevoAvisoPersonal { get; set; } =new CrearAvisoPersonalDto();
 
-        public AlumnoDetallesListaDTO AlumnoSeleccionado { get; set; } = new();
+        public int AlumnoSeleccionado { get; set; } = new();
 
         public AlumnoCreateDTO NuevoAlumno { get; set; } = new AlumnoCreateDTO();
 
@@ -42,12 +44,17 @@ namespace AvisosEscolares.Viewmodels
         
         public ICommand MostrarAvisosGeneralesMaestroCommand { get; set; }
 
+        public ICommand MostrarCrearAvisoPersonalCommand { get; set; }
+        public ICommand MostrarAvisosPersonalesMaestroCommand { get; set; }
+
         AvisosEscolaresServices service = new();
 
         public AvisosEscolaresViewmodel()
         {
             LoginCommand = new Command(Login);
             MostrarAvisosGeneralesMaestroCommand = new Command(MostrarAvisosGeneralesMaestro);
+            MostrarAvisosPersonalesMaestroCommand = new Command<int>(MostrarAvisosPersonalesMaestro);
+            MostrarCrearAvisoPersonalCommand=new Command<int>(MostrarCrearAvisoPersonal);
             CambiarVistaCommand = new Command<string>(CambiarVista);
             CrearAvisoGeneralCommand = new Command(CrearAvisoGeneral);
             CrearAvisoPersonalCommand = new Command(CrearAvisoPersonal);
@@ -55,10 +62,28 @@ namespace AvisosEscolares.Viewmodels
             AgregarAlumnoCommand = new Command(AgregarAlumno);
         }
 
+        private async void MostrarCrearAvisoPersonal(int idAlumno)
+        {
+            AlumnoSeleccionado = idAlumno;
+            NuevoAvisoPersonal.AlumnoId = AlumnoSeleccionado;
+            await Shell.Current.GoToAsync("crearAvisoPersonal");
+        }
+
+        private async void MostrarAvisosPersonalesMaestro(int idAlumno)
+        {
+           AvisosPersonales.Clear();
+            var avisos = await service.ObtenerAvisosPersonalesPorAlumno(idAlumno);
+            foreach (var aviso in avisos)
+            {
+                AvisosPersonales.Add(aviso);
+            }
+             await Shell.Current.GoToAsync("avisosPersonalesMaestro");
+        }
+
         private async void CrearAvisoPersonal()
         {
             NuevoAvisoPersonal.MaestroId = (int)maestro.Id;
-            NuevoAvisoPersonal.AlumnoId = AlumnoSeleccionado.Id;
+            NuevoAvisoPersonal.AlumnoId = AlumnoSeleccionado;
             await service.CrearAvisoPersonal(NuevoAvisoPersonal);
             VerListaAlumnos();
         }

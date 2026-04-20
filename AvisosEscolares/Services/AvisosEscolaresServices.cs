@@ -66,6 +66,16 @@ namespace AvisosEscolares.Services
             }
         }
 
+        public async Task<List<AvisoPersonalDetallesMaestroDTO>> ObtenerAvisosPersonalesPorAlumno(int alumnoId)
+        {
+            var response = await client.GetAsync($"api/avisos/personales/alumno/{alumnoId}");
+            if (response.IsSuccessStatusCode)
+            {
+                return await response.Content.ReadFromJsonAsync<List<AvisoPersonalDetallesMaestroDTO>>();
+            }
+            return new List<AvisoPersonalDetallesMaestroDTO>();
+        }
+
         public async Task CrearAlumno(AlumnoCreateDTO dto)
         {
             var response = await client.PostAsJsonAsync("api/alumnos", dto);

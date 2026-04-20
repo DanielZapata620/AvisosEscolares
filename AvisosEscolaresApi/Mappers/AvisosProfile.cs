@@ -26,10 +26,55 @@ namespace AvisosEscolaresApi.Mappers
             .ForMember(dest=>dest.FechaCaducidad,opt=>opt.MapFrom(src=>src.Avisogeneral.FechaCaducidad))
             .ForMember(dest => dest.CantLeidos, opt => opt.MapFrom(src =>src.Avisoalumnoestado.Count(e => e.EstadoId==3)));
 
-            CreateMap<Aviso, AvisoPersonalDetallesMaestroDTO>()
-            .ForMember(dest => dest.Estado,opt => opt.MapFrom(src => src.Avisoalumnoestado.Select(e=>e.EstadoId).First() == 1 ? "Sin ver" :
-                                                                     src.Avisoalumnoestado.Select(e=>e.EstadoId).First() == 2 ? "Visto" :
-                                                                      "Leído"));
+            CreateMap<Avisoalumnoestado, AvisoPersonalDetallesMaestroDTO>()
+            .ForMember(d => d.AvisoId, o => o.MapFrom(s => s.Aviso.Id))
+            .ForMember(d => d.Titulo, o => o.MapFrom(s => s.Aviso.Titulo))
+            .ForMember(d => d.Mensaje, o => o.MapFrom(s => s.Aviso.Mensaje))
+            .ForMember(d => d.FechaLeido, o => o.MapFrom(s => s.FechaLeido))
+
+            // 🔥 ESTADO PERSONALIZADO
+            .ForMember(d => d.Estado, o => o.MapFrom(s =>
+                s.Estado.Nombre == "Nuevo" ? "Sin Ver" :
+                s.Estado.Nombre == "Recibido" ? "Visto" :
+                s.Estado.Nombre == "Leído" ? "Leído" :
+                "Sin Ver"
+            ))
+
+            // 🔥 MAESTRO (aquí está lo que preguntaste)
+
+            ;
+
+            CreateMap<Avisoalumnoestado, AvisoPersonalListaAlumnoDTO>()
+            .ForMember(d => d.AvisoId, o => o.MapFrom(s => s.Aviso.Id))
+            .ForMember(d => d.Titulo, o => o.MapFrom(s => s.Aviso.Titulo))
+            .ForMember(d => d.Mensaje, o => o.MapFrom(s => s.Aviso.Mensaje))
+            .ForMember(d => d.FechaLeido, o => o.MapFrom(s => s.FechaLeido))
+
+            // 🔥 ESTADO PERSONALIZADO
+            .ForMember(d => d.Estado, o => o.MapFrom(s =>
+                s.Estado.Nombre ))
+
+            // 🔥 MAESTRO (aquí está lo que preguntaste)
+            .ForMember(d => d.Maestro, o => o.MapFrom(s =>
+                s.Aviso.Avisopersonal.Maestro.Nombre
+            ));
+
+
+            CreateMap<Avisoalumnoestado, AvisoPersonalAlumnoDTO>()
+            .ForMember(d => d.AvisoId, o => o.MapFrom(s => s.Aviso.Id))
+            .ForMember(d => d.Titulo, o => o.MapFrom(s => s.Aviso.Titulo))
+            .ForMember(d => d.Mensaje, o => o.MapFrom(s => s.Aviso.Mensaje))
+            .ForMember(d => d.FechaLeido, o => o.MapFrom(s => s.FechaLeido))
+
+            // 🔥 ESTADO PERSONALIZADO
+            .ForMember(d => d.Estado, o => o.MapFrom(s =>
+                s.Estado.Nombre))
+
+            // 🔥 MAESTRO (aquí está lo que preguntaste)
+            .ForMember(d => d.Maestro, o => o.MapFrom(s =>
+                s.Aviso.Avisopersonal.Maestro.Nombre
+            ));
+
 
         }
 

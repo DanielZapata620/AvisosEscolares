@@ -27,4 +27,27 @@
 
     }
 
+    public class AvisoPersonalDetallesMaestroDTO
+    {
+        public int AvisoId { get; set; }
+        public string Titulo { get; set; }
+        public string Mensaje { get; set; }
+
+        public string Estado { get; set; }
+        public DateTime? FechaLeido { get; set; }
+
+
+    }
+
+    public class AvisoPersonalListaAlumnoDTO : AvisoPersonalDetallesMaestroDTO
+    {
+        public string Maestro { get; set; }
+
+    }
+
+    public class AvisoPersonalAlumnoDTO : AvisoPersonalListaAlumnoDTO
+    {
+
+    }
+
 }

@@ -2,8 +2,105 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="AvisosEscolares.Views.ListaAlumnosPage"
-             Title="ListaAlumnosPage">
-    <VerticalStackLayout>
+             Title="ListaAlumnosPage" BackgroundColor="White">
+
+
+
+    <Grid RowDefinitions="Auto, Auto, *">
+
+        <BoxView Grid.Row="0" Color="#2D214F" HeightRequest="60" />
+        <Label Grid.Row="0" 
+               Text="GESTIÓN DE ALUMNOS" 
+               TextColor="White" 
+               FontSize="16" 
+               FontAttributes="Bold"
+               FontFamily="OpenSansSemiBold"
+               HorizontalOptions="Center" 
+               VerticalOptions="Center" />
+
+        <Grid Grid.Row="1" 
+              Margin="20,15" 
+              ColumnDefinitions="60, *" 
+              ColumnSpacing="10">
+
+            <Button Grid.Column="0"
+                    ImageSource="back_arrow.png"
+                    BackgroundColor="#513B94" 
+                    CornerRadius="10"
+                    HeightRequest="45"
+                    Padding="0" />
+
+            <Button Grid.Column="1"
+                    Text="+  AGREGAR ALUMNO" 
+                    TextColor="White" 
+                    FontSize="12"
+                    FontAttributes="Bold"
+                    FontFamily="OpenSansSemiBold"
+                    BackgroundColor="#513B94" 
+                    CornerRadius="10"
+                    HeightRequest="45"
+                    Command="{Binding CambiarVistaCommand}" 
+                    CommandParameter="AgregarAlumno" />
+        </Grid>
+
+        <Border Grid.Row="2" 
+                Margin="20,0,20,20" 
+                Padding="0" 
+                Stroke="#333333"
+                StrokeThickness="1"
+                VerticalOptions="Start">
+
+            <Border.StrokeShape>
+                <RoundRectangle CornerRadius="8" />
+            </Border.StrokeShape>
+
+            <Grid RowDefinitions="45, Auto">
+                <Grid Grid.Row="0" BackgroundColor="#513B94" ColumnDefinitions="80, *, 100">
+                    <Label Text="MATRICULA" TextColor="White" VerticalOptions="Center" HorizontalOptions="Center" FontSize="10" FontAttributes="Bold" FontFamily="OpenSansSemiBold"/>
+                    <Label Grid.Column="1" Text="NOMBRE" TextColor="White" VerticalOptions="Center" Margin="5,0" FontSize="10" FontAttributes="Bold" FontFamily="OpenSansSemiBold"/>
+                    <Label Grid.Column="2" Text="ACCIONES" TextColor="White" VerticalOptions="Center" HorizontalOptions="Center" FontSize="10" FontAttributes="Bold" FontFamily="OpenSansSemiBold"/>
+                </Grid>
+
+                <CollectionView Grid.Row="1" x:Name="AlumnosCollection" SelectionMode="None" ItemsSource="{Binding ListaAlumnos}">
+                    <CollectionView.ItemTemplate>
+                        <DataTemplate>
+                            <Grid ColumnDefinitions="80, *, 100" BackgroundColor="#F9EBEB" HeightRequest="45">
+                                <Label Text="{Binding Usuario}" TextColor="Black" VerticalOptions="Center" HorizontalOptions="Center" FontSize="10" FontFamily="OpenSansSemiBold"/>
+                                <Label Grid.Column="1" Text="{Binding Nombre}" TextColor="Black" VerticalOptions="Center" Margin="5,0" FontSize="10" LineBreakMode="TailTruncation" FontFamily="OpenSansSemiBold"/>
+
+                                <HorizontalStackLayout Grid.Column="2" Spacing="6" HorizontalOptions="Center" VerticalOptions="Center">
+                                    <Image Source="view_icon.png" HeightRequest="16" WidthRequest="16">
+                                        <Image.GestureRecognizers>
+                                            <TapGestureRecognizer Tapped="OnVerTapped" Command="{Binding Source={RelativeSource AncestorType={x:Type ContentPage}}, Path=BindingContext.MostrarAvisosPersonalesMaestroCommand}" CommandParameter="{Binding Id}" />
+                                        </Image.GestureRecognizers>
+                                    </Image>
+
+                                    <Image Source="notify_icon.png" HeightRequest="16" WidthRequest="16">
+                                        <Image.GestureRecognizers>
+                                            <TapGestureRecognizer Tapped="OnAvisosTapped" Command="{Binding Source={RelativeSource AncestorType={x:Type ContentPage}}, Path=BindingContext.MostrarCrearAvisoPersonalCommand }" CommandParameter="{Binding Id}" />
+                                        </Image.GestureRecognizers>
+                                    </Image>
+
+                                    <Image Source="edit_icon.png" HeightRequest="16" WidthRequest="16">
+                                        <Image.GestureRecognizers>
+                                            <TapGestureRecognizer Tapped="OnEditarTapped" CommandParameter="{Binding Id}" />
+                                        </Image.GestureRecognizers>
+                                    </Image>
+
+                                    <Image Source="delete_icon.png" HeightRequest="16" WidthRequest="16">
+                                        <Image.GestureRecognizers>
+                                            <TapGestureRecognizer Tapped="OnEliminarTapped" CommandParameter="{Binding Id}" />
+                                        </Image.GestureRecognizers>
+                                    </Image>
+                                </HorizontalStackLayout>
+                            </Grid>
+                        </DataTemplate>
+                    </CollectionView.ItemTemplate>
+                </CollectionView>
+            </Grid>
+        </Border>
+    </Grid>
+    <!--<VerticalStackLayout>
         <Button Text="Agregar Alumno" Command="{Binding CambiarVistaCommand}" CommandParameter="AgregarAlumno" />
         <CollectionView ItemsSource="{Binding ListaAlumnos}" SelectedItem="{Binding AlumnoSeleccionado}" SelectionMode="Single">
             <CollectionView.ItemTemplate>
@@ -17,6 +114,6 @@
                 </DataTemplate>
             </CollectionView.ItemTemplate>
         </CollectionView>
-    </VerticalStackLayout>
+    </VerticalStackLayout>-->
         
 </ContentPage>

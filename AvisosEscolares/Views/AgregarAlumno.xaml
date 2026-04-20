@@ -2,11 +2,105 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="AvisosEscolares.Views.AgregarAlumno"
-             Title="AgregarAlumno">
-    <VerticalStackLayout>
+             Title="AgregarAlumno" BackgroundColor="White" Shell.NavBarIsVisible="False">
+    <Grid RowDefinitions="Auto, *, Auto">
+
+        <BoxView Grid.Row="0" Color="#2D214F" HeightRequest="60" />
+        <Label Grid.Row="0" 
+               Text="AGREGAR ALUMNO" 
+               TextColor="White" 
+               FontSize="15" 
+               FontAttributes="Bold"
+               FontFamily="OpenSansSemiBold"
+               HorizontalOptions="Center" 
+               VerticalOptions="Center" />
+
+        <ScrollView Grid.Row="1">
+            <VerticalStackLayout Padding="25,30" Spacing="18">
+
+                <Label Text="INFORMACIÓN DEL ALUMNO" 
+                       TextColor="Black" 
+                       FontSize="17" 
+                       FontAttributes="Bold" 
+                       FontFamily="OpenSansSemiBold"
+                       Margin="0,0,0,5"/>
+
+                <VerticalStackLayout Spacing="5">
+                    <Label Text="NOMBRE COMPLETO" TextColor="#333333" FontSize="12" FontAttributes="Bold" FontFamily="OpenSansSemiBold"/>
+                    <Border Stroke="#000000" StrokeThickness="1" BackgroundColor="#F5E8E8" HeightRequest="40">
+                        <Border.StrokeShape>
+                            <RoundRectangle CornerRadius="8" />
+                        </Border.StrokeShape>
+                        <Entry Text="{Binding NuevoAlumno.Nombre}" 
+                               TextColor="Black" 
+                               Margin="10,0"
+                               VerticalOptions="Center"
+                               FontSize="14"
+                               FontFamily="OpenSansSemiBold"/>
+                    </Border>
+                </VerticalStackLayout>
+
+                <VerticalStackLayout Spacing="5">
+                    <Label Text="MATRÍCULA" TextColor="#333333" FontSize="12" FontAttributes="Bold" FontFamily="OpenSansSemiBold"/>
+                    <Border Stroke="#000000" StrokeThickness="1" BackgroundColor="#F5E8E8" HeightRequest="40">
+                        <Border.StrokeShape>
+                            <RoundRectangle CornerRadius="8" />
+                        </Border.StrokeShape>
+                        <Entry Text="{Binding NuevoAlumno.Usuario}" 
+                               TextColor="Black" 
+                               Margin="10,0"
+                               VerticalOptions="Center"
+                               FontSize="14"
+                               FontFamily="OpenSansSemiBold"/>
+                    </Border>
+                </VerticalStackLayout>
+
+                <VerticalStackLayout Spacing="5">
+                    <Label Text="CONTRASEÑA" TextColor="#333333" FontSize="12" FontAttributes="Bold" FontFamily="OpenSansSemiBold"/>
+                    <Border Stroke="#000000" StrokeThickness="1" BackgroundColor="#F5E8E8" HeightRequest="40">
+                        <Border.StrokeShape>
+                            <RoundRectangle CornerRadius="8" />
+                        </Border.StrokeShape>
+                        <Entry Text="{Binding NuevoAlumno.Contraseña}" 
+                               IsPassword="True"
+                               TextColor="Black" 
+                               Margin="10,0"
+                               VerticalOptions="Center"
+                               FontSize="14"
+                               FontFamily="OpenSansSemiBold"/>
+                    </Border>
+                </VerticalStackLayout>
+            </VerticalStackLayout>
+        </ScrollView>
+
+        <VerticalStackLayout Grid.Row="2" Padding="25,0,25,20" Spacing="10">
+            <Button Text="AGREGAR" 
+                    Command="{Binding AgregarAlumnoCommand}"
+                    BackgroundColor="#513B94" 
+                    TextColor="White" 
+                    FontAttributes="Bold"
+                    FontFamily="OpenSansSemiBold"
+                    CornerRadius="8" 
+                    HeightRequest="42"
+                    FontSize="12"/>
+
+            <Button Text="CANCELAR" 
+                    Command="{Binding CambiarVistaCommand}"
+                    CommandParameter="listaAlumnos"
+                    BackgroundColor="#513B94" 
+                    TextColor="White" 
+                    FontAttributes="Bold"
+                    FontFamily="OpenSansSemiBold"
+                    CornerRadius="8" 
+                    HeightRequest="42"
+                    FontSize="12"/>
+        </VerticalStackLayout>
+
+    </Grid>
+    <!--<VerticalStackLayout>
         <Entry Placeholder="Usuario" Text="{Binding NuevoAlumno.Nombre}" />
         <Entry Placeholder="Nombre" Text="{Binding NuevoAlumno.Usuario}" />
         <Entry Placeholder="Contraseña" Text="{Binding NuevoAlumno.Contraseña}"  />
         <Button Text="Agregar" Command="{Binding AgregarAlumnoCommand}" />
-    </VerticalStackLayout>
+    </VerticalStackLayout>-->
 </ContentPage>

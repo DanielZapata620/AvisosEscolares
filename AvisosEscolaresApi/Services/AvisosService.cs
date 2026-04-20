@@ -43,6 +43,55 @@ namespace AvisosEscolaresApi.Services
 
 
         }
+
+        public List<AvisoPersonalDetallesMaestroDTO> ObtenerAvisosPersonales(int id)
+        {
+            var avisos = EstadoRepo.Query().Include(x => x.Aviso).Include(x=>x.Estado).Where(x => x.AlumnoId == id);
+            return avisos.Select(a => Mapper.Map<AvisoPersonalDetallesMaestroDTO>(a)).ToList();
+        }
+
+        public List<AvisoPersonalListaAlumnoDTO> ObtenerAvisosPersonalesAlumno(int id)
+        {
+            var avisos = EstadoRepo.Query().Include(x => x.Aviso).ThenInclude(x=>x.Avisopersonal).ThenInclude(x=>x.Maestro).Include(x => x.Estado).Where(x => x.AlumnoId == id);
+            return avisos.Select(a => Mapper.Map<AvisoPersonalListaAlumnoDTO>(a)).ToList();
+        }
+
+        public AvisoPersonalAlumnoDTO ObtenerAvisoPersonalAlumno(int id)
+        {
+            var aviso = EstadoRepo.Query().Include(x => x.Aviso).ThenInclude(x => x.Avisopersonal).ThenInclude(x => x.Maestro).Include(x => x.Estado).FirstOrDefault(x => x.AvisoId == id);
+            return Mapper.Map<AvisoPersonalAlumnoDTO>(aviso);
+        }
+
+        public void MarcarAvisosComoLeido(List<int> avisoId, int alumnoId)
+        {
+            var estados = EstadoRepo.Query().Where(e => e.AlumnoId == alumnoId).ToList();
+            foreach (var estado in estados)
+            {
+                if (estado.EstadoId == 1)
+                {
+                    estado.EstadoId = 2; // Cambia el estado a "Leído"
+                    estado.FechaLeido = DateTime.Now; // Registra la fecha de lectura
+                    EstadoRepo.Update(estado);
+                }
+                
+            }
+        }
+
+        public void MarcarAvisoComoLeido(int avisoId)
+        {
+            var estado = EstadoRepo.Query().Where(e => e.AvisoId == avisoId).FirstOrDefault();
+            if (estado != null && estado.EstadoId == 1 || estado.EstadoId == 2)
+            {
+                estado.EstadoId = 3; // Cambia el estado a "Leído"
+                estado.FechaLeido = DateTime.Now; // Registra la fecha de lectura
+                EstadoRepo.Update(estado);
+            }
+          
+        }
+
+                    
+
+
         public void CrearAvisoGeneral(CrearAvisoGeneralDto dto)
         {
            

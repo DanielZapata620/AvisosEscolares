@@ -14,6 +14,7 @@ namespace AvisosEscolares
             Routing.RegisterRoute("listaAlumnos", typeof(ListaAlumnosPage));
             Routing.RegisterRoute("AgregarAlumno", typeof(AgregarAlumno));
             Routing.RegisterRoute("crearAvisoPersonal", typeof(AgregarAvisoPersonalView));
+            Routing.RegisterRoute("avisosPersonalesMaestro", typeof(AvisosPersonalesMaestro));
 
 
         }
