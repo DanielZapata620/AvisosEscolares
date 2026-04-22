@@ -23,7 +23,7 @@ namespace AvisosEscolaresApi.Controllers
 
             if (result == null)
                 return Unauthorized("Usuario o contraseña incorrectos.");
-
+            
             return Ok(result);
         }
     }

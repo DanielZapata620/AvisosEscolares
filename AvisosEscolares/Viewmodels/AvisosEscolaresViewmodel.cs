@@ -83,7 +83,7 @@ namespace AvisosEscolares.Viewmodels
                 AvisoPersonalSeleccionadoAlumno = aviso;
                 PropertyChanged?.Invoke(this, new(nameof(AvisoPersonalSeleccionadoAlumno)));
                 // Navegar a la página de detalles del aviso
-                await Shell.Current.GoToAsync("VerAvisoPersonalAlumnoCommand");
+                await Shell.Current.GoToAsync("verAvisoPersonalAlumno");
             }
         }
 

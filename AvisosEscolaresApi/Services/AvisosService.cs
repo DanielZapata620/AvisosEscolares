@@ -70,7 +70,7 @@ namespace AvisosEscolaresApi.Services
                 if (estado.EstadoId == 1)
                 {
                     estado.EstadoId = 2; // Cambia el estado a "Leído"
-                    estado.FechaLeido = DateTime.Now; // Registra la fecha de lectura
+                    /*estado.FechaLeido = DateTime.Now; */// Registra la fecha de lectura
                     EstadoRepo.Update(estado);
                 }
 
