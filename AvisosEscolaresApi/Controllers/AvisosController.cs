@@ -44,6 +44,12 @@ namespace AvisosEscolaresApi.Controllers
             return Ok(aviso);
         }
 
+        [HttpGet("generales/{id}")]
+        public IActionResult GetAvisosGeneralesPorAlumno(int id)
+        {
+            var avisos = Service.ObtenerAvisosGeneralesVigentesAlumno(id);
+            return Ok(avisos);
+        }
 
         [HttpPut("personal/marcarleidos/{alumnoId}")]
         public IActionResult MarcarComoLeidos([FromBody] List<int> ids, int alumnoId)

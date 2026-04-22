@@ -24,6 +24,12 @@ namespace AvisosEscolaresApi.Repositories
             Context.Add(entity);
             Context.SaveChanges();
         }
+
+        public void InsertRange(IEnumerable<T> entities)
+        {
+            Context.AddRange(entities);
+            Context.SaveChanges();
+        }
         public void Update(T entity)
         {
             Context.Update(entity);

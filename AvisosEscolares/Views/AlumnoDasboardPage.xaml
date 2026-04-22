@@ -2,9 +2,205 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="AvisosEscolares.Views.AlumnoDasboardPage"
-             Title="AlumnoDasboardPage">
+             Title="AlumnoDasboardPage" BackgroundColor="White" Shell.NavBarIsVisible="False">
 
-    <Grid RowDefinitions="Auto, Auto, *">
+    <Grid RowDefinitions="Auto,Auto,*">
+        <Grid ColumnDefinitions="auto,*,auto" ColumnSpacing="10" Background="#0F2D5E" Padding="20,15,20,16">
+            <Border WidthRequest="50" HeightRequest="50" BackgroundColor="#0EA5A0" Stroke="#0C7A76" Padding="0,0,0,0">
+                <Border.StrokeShape>
+                    <RoundRectangle CornerRadius="25"></RoundRectangle>
+                </Border.StrokeShape>
+
+                <Label Text="AH" TextColor="White" HorizontalOptions="Center" VerticalOptions="Center"
+                   FontSize="20" FontAttributes="Bold"></Label>
+            </Border>
+
+            <VerticalStackLayout Grid.Column="1" Spacing="2">
+                <Label Text="Bienvenido de vuelta" FontSize="12" TextColor="#80FFFFFF"></Label>
+                <Label Text="{Binding alumno.Nombre}" FontSize="15" FontAttributes="Bold" TextColor="White"></Label>
+                <Label Text="{Binding alumno.GrupoNombre, StringFormat='{0} · Bachillerato General'}" FontSize="12" TextColor="#70FFFFFF"/>
+            </VerticalStackLayout>
+
+
+        </Grid>
+
+        <Grid Grid.Row="1" BackgroundColor="#0F2D5E" ColumnDefinitions="*,*">
+            <Button Text="Generales"  TextColor="{Binding _GeneralTextColor}" Background="Transparent" Command="{Binding MostrarAvisosPersonalesAlumnoCommand}" CommandParameter="Generales"></Button>
+            <Border BackgroundColor="#F05E2B" Padding="4,0" HorizontalOptions="End"
+           VerticalOptions="Center" Margin="0,0,30,0">
+                <Label Text="{Binding CantAvisosGeneralesNuevos}" FontSize="10" TextColor="White"></Label>
+                <Border.StrokeShape>
+                    <RoundRectangle CornerRadius="10"></RoundRectangle>
+                </Border.StrokeShape>
+            </Border>
+
+            <Button Grid.Column="1" Text="Personales" TextColor="{Binding _PersonalesTextColor}" Background="Transparent" Command="{Binding MostrarAvisosPersonalesAlumnoCommand}" CommandParameter="Personales"></Button>
+            <Border Grid.Column="1" BackgroundColor="#F05E2B" Padding="4,0" HorizontalOptions="End"
+                       VerticalOptions="Center" Margin="0,0,30,0">
+                <Label Text="{Binding CantAvisosPersonalesNuevos}" FontSize="10" TextColor="White"></Label>
+                <Border.StrokeShape>
+                    <RoundRectangle CornerRadius="10"></RoundRectangle>
+                </Border.StrokeShape>
+            </Border>
+        </Grid>
+
+        <Grid Grid.Row="2">
+            <ScrollView>
+                <VerticalStackLayout Spacing="10" Padding="0,5">
+                    <Border Margin="16" BackgroundColor="White">
+                        <Border.StrokeShape>
+                            <RoundRectangle CornerRadius="16"></RoundRectangle>
+                        </Border.StrokeShape>
+
+                        <VerticalStackLayout>
+
+                            <Grid BackgroundColor="#0F2D5E" Padding="15" ColumnDefinitions="Auto,*">
+                                <Image Source="colegio.png" WidthRequest="28" Margin="0,0,10,0" HeightRequest="28"></Image>
+                                <VerticalStackLayout Grid.Column="1">
+                                    <Label Text="CETIS No. 12 · Monclova"
+                                           TextColor="White"
+                                           FontAttributes="Bold"/>
+
+                                    <Label Text="Ciclo Escolar 2025-2026"
+                                           FontSize="11"
+                                           TextColor="#80FFFFFF"/>
+                                </VerticalStackLayout>
+                            </Grid>
+                            <Grid ColumnDefinitions="*,*" RowDefinitions="Auto,Auto" Padding="10">
+                                <VerticalStackLayout Grid.Column="0" HorizontalOptions="Center">
+                                    <Label Text="Matrícula" TextColor="Gray" FontAttributes="Bold" HorizontalTextAlignment="Center"></Label>
+                                    <Label Text="{Binding alumno.Usuario}" Grid.Column="1" TextColor="Black"></Label>
+                                </VerticalStackLayout>
+
+                                <VerticalStackLayout Grid.Column="1" HorizontalOptions="Center">
+                                    <Label Text="Grupo" Grid.Row="1" TextColor="Gray" FontAttributes="Bold" HorizontalTextAlignment="Center"></Label>
+                                    <Label Text="{Binding alumno.GrupoNombre}" Grid.Row="1" Grid.Column="1" TextColor="Black" HorizontalTextAlignment="Center"></Label>
+                                </VerticalStackLayout>
+
+                                <VerticalStackLayout Grid.Row="1" HorizontalOptions="Center" Margin="0,10,0,0">
+                                    <Label Text="Turno" Grid.Row="1" TextColor="Gray" FontAttributes="Bold" HorizontalTextAlignment="Center"></Label>
+                                    <Label Text="Matutino" Grid.Row="1" Grid.Column="1" TextColor="Black" HorizontalTextAlignment="Center"></Label>
+                                </VerticalStackLayout>
+
+                                <VerticalStackLayout Grid.Row="1" Grid.Column="1" HorizontalOptions="Center" Margin="0,10,0,0">
+                                    <Label Text="Avisos" Grid.Row="1" TextColor="Gray" FontAttributes="Bold" HorizontalTextAlignment="Center"></Label>
+                                    <Label Text="2" Grid.Row="1" Grid.Column="1" TextColor="Orange" HorizontalTextAlignment="Center"></Label>
+                                </VerticalStackLayout>
+                            </Grid>
+                        </VerticalStackLayout>
+                    </Border>
+
+                    <Grid IsVisible="{Binding IsGeneralesVisible}" Margin="-20">
+                        
+                    <!--MENSAJES GENERALES-->
+                    
+                        <ScrollView>
+                            <VerticalStackLayout Spacing="10" Padding="0,10">
+                                <CollectionView ItemsSource="{Binding ListaAvisosGenerales}">
+                                    <CollectionView.ItemTemplate>
+                                        <DataTemplate>
+                                            <ContentView>
+                                                <ContentView.GestureRecognizers>
+                                                    <TapGestureRecognizer 
+                    Command="{Binding Source={RelativeSource AncestorType={x:Type Shell}}, Path=BindingContext.VerContenidoMensajeGeneralCommand}" />
+                                                </ContentView.GestureRecognizers>
+
+                                                <Border Margin="25,5,25,0" BackgroundColor="White" Padding="0">
+                                                    <Border.StrokeShape>
+                                                        <RoundRectangle CornerRadius="20"></RoundRectangle>
+                                                    </Border.StrokeShape>
+
+                                                    <VerticalStackLayout>
+                                                        <Grid BackgroundColor="#0F2D5E" Padding="12" ColumnDefinitions="*,auto,auto">
+                                                            <Label Text="Comunicado general" FontAttributes="Bold" FontSize="14" TextColor="#80FFFFFF"></Label>
+
+                                                            <Border Grid.Column="1" BackgroundColor="#69c9c5" Padding="10,2" Stroke="Transparent"
+                                VerticalOptions="Start" Margin="0,0,10,0">
+                                                                <Border.StrokeShape>
+                                                                    <RoundRectangle CornerRadius="10"/>
+                                                                </Border.StrokeShape>
+                                                                <Label Text="{Binding FechaCaducidad, StringFormat='Vigencia: {0:dd/MM/yyyy}'}" FontSize="10" TextColor="White" FontAttributes="Bold"></Label>
+                                                            </Border>
+                                                            <Label Text="{Binding Estado}" FontSize="11" TextColor="Orange" Opacity="1" FontAttributes="Bold" Grid.Column="2" HorizontalOptions="Center" VerticalOptions="Center"></Label>
+                                                        </Grid>
+                                                        <VerticalStackLayout Padding="12" Spacing="8">
+                                                            <Label Text="{Binding Titulo}" FontAttributes="Bold" TextColor="Black" FontSize="15"></Label>
+                                                            <Label Text="{Binding Mensaje}"
+                FontSize="13"
+                TextColor="Gray" MaxLines="2" LineBreakMode="TailTruncation"></Label>
+
+                                                            <Label Text="Publicado: 12/07/2026" FontSize="11" TextColor="LightGray" HorizontalOptions="End"></Label>
+                                                        </VerticalStackLayout>
+                                                    </VerticalStackLayout>
+                                                </Border>
+                                            </ContentView>
+                                        </DataTemplate>
+                                    </CollectionView.ItemTemplate>
+                                </CollectionView>
+                            </VerticalStackLayout>
+                        </ScrollView>
+                    </Grid>
+
+                    <Grid IsVisible="{Binding IsPersonalesVisible}">
+
+                        <!--MENSAJES PERSONALES-->
+
+                        <ScrollView>
+                            <VerticalStackLayout Spacing="10" Padding="0,10">
+                                <CollectionView ItemsSource="{Binding ListaAvisosPersonales}">
+                                    <CollectionView.ItemTemplate>
+                                        <DataTemplate>
+                                            <ContentView>
+                                                <ContentView.GestureRecognizers>
+                                                    <TapGestureRecognizer Command="{Binding BindingContext.VerAvisoPersonalAlumnoCommand, Source={RelativeSource AncestorType={x:Type CollectionView}}}"
+CommandParameter="{Binding AvisoId}"/>
+                                                </ContentView.GestureRecognizers>
+
+                                                <Border Margin="16,6" BackgroundColor="White" Padding="0">
+                                                    <Border.StrokeShape>
+                                                        <RoundRectangle CornerRadius="15"/>
+                                                    </Border.StrokeShape>
+
+                                                    <Border.Shadow>
+                                                        <Shadow Brush="#20000000" Offset="0,2" Radius="5"></Shadow>
+                                                    </Border.Shadow>
+
+                                                    <Grid ColumnDefinitions="6,*,Auto" Padding="12" ColumnSpacing="10">
+                                                        <BoxView Grid.Column="0" WidthRequest="6" CornerRadius="3" Color="Orange"></BoxView>
+
+                                                        <VerticalStackLayout Grid.Column="1" Spacing="6">
+                                                            <Grid ColumnDefinitions="*,Auto">
+
+                                                                <Label Text="{Binding Titulo}" FontAttributes="Bold" FontSize="14" TextColor="Black" LineBreakMode="WordWrap"></Label>
+
+                                                                <Label Grid.Column="1" Text="{Binding Estado}" FontSize="11" TextColor="Orange" FontAttributes="Bold" VerticalOptions="Center"></Label>
+                                                            </Grid>
+
+                                                            <Label Text="{Binding Mensaje}"
+                   FontSize="13" TextColor="Gray" LineBreakMode="TailTruncation" MaxLines="2" ></Label>
+
+                                                            <Grid ColumnDefinitions="*,Auto">
+                                                                <Label Text="{Binding Maestro,StringFormat='Profesor: {0}'}" FontSize="11" TextColor="#A0AFBF"></Label>
+                                                                <!--<Label Grid.Column="1" Text="20/05/2026" FontSize="11" TextColor="#A0AFBF"></Label>-->
+                                                            </Grid>
+
+                                                        </VerticalStackLayout>
+                                                    </Grid>
+                                                </Border>
+                                            </ContentView>
+                                        </DataTemplate>
+                                    </CollectionView.ItemTemplate>
+                                </CollectionView>
+                            </VerticalStackLayout>
+                        </ScrollView>
+                    </Grid>
+                </VerticalStackLayout>
+            </ScrollView>
+        </Grid>
+    </Grid>
+</ContentPage>
+
+<!--<Grid RowDefinitions="Auto, Auto, *">
 
         <BoxView Grid.Row="0" Color="#4A3B8E" HeightRequest="150" />
         <HorizontalStackLayout Grid.Row="0" Padding="20" Spacing="15" VerticalOptions="Center">
@@ -32,10 +228,10 @@
                     <Border.StrokeShape>
                         <RoundRectangle CornerRadius="12" />
                     </Border.StrokeShape>
-                    <Label Text="2" TextColor="White" FontSize="12" HorizontalOptions="Center" VerticalOptions="Center" FontAttributes="Bold" />
+                    <Label Text="{Binding CantAvisosGeneralesNuevos}" TextColor="White" FontSize="12" HorizontalOptions="Center" VerticalOptions="Center" FontAttributes="Bold" />
                 </Border>
                 <HorizontalStackLayout.GestureRecognizers>
-                    <TapGestureRecognizer Command="{Binding VerGeneralesCommand}" />
+                    <TapGestureRecognizer Command="{Binding MostrarAvisosPersonalesAlumnoCommand}" />
                 </HorizontalStackLayout.GestureRecognizers>
             </HorizontalStackLayout>
 
@@ -55,7 +251,41 @@
             </HorizontalStackLayout>
         </Grid>
 
-        <CollectionView Grid.Row="2" ItemsSource="{Binding ListaAvisosPersonales}" >
+        <CollectionView Grid.Row="2" ItemsSource="{Binding ListaAvisosGenerales}" >
+            <CollectionView.ItemsLayout>
+                <LinearItemsLayout Orientation="Vertical" ItemSpacing="15" />
+            </CollectionView.ItemsLayout>
+            <CollectionView.ItemTemplate>
+                <DataTemplate>
+                    <Border Stroke="#000000" StrokeThickness="1" BackgroundColor="#F9F1F1">
+                        <Border.StrokeShape>
+                            <RoundRectangle CornerRadius="20" />
+                        </Border.StrokeShape>
+
+                        <VerticalStackLayout Padding="20" Spacing="10">
+                            <Grid ColumnDefinitions="*, Auto">
+                                <Label Grid.Column="0" Text="{Binding Titulo}" TextColor="Black" FontSize="16" FontAttributes="Bold" FontFamily="OpenSansSemiBold" />
+                                <Border Grid.Column="1" BackgroundColor="#689F38" StrokeThickness="0" Padding="8,2">
+                                    <Border.StrokeShape>
+                                        <RoundRectangle CornerRadius="5" />
+                                    </Border.StrokeShape>
+                                    <Label Text="{Binding Estado}" TextColor="White" FontSize="12" FontFamily="OpenSansSemiBold" />
+                                </Border>
+                            </Grid>
+
+                            <Label Text="{Binding Mensaje}" TextColor="Black" FontSize="14" FontFamily="OpenSansSemiBold" LineBreakMode="WordWrap" />
+
+                            <Label Text="{Binding FechaCaducidad, StringFormat='{0:dd/MM/yyyy}'}" TextColor="Black" FontSize="11" HorizontalOptions="End" FontFamily="OpenSansSemiBold" />
+                        </VerticalStackLayout>
+                    </Border>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+        </CollectionView>-->
+        
+        
+        
+        
+        <!--<CollectionView Grid.Row="2" ItemsSource="{Binding ListaAvisosPersonales}" >
             <CollectionView.ItemsLayout>
                 <LinearItemsLayout Orientation="Vertical" ItemSpacing="15" />
             </CollectionView.ItemsLayout>
@@ -85,6 +315,8 @@
                     </Border>
                 </DataTemplate>
             </CollectionView.ItemTemplate>
-        </CollectionView>
-    </Grid>
-</ContentPage>
+        </CollectionView>-->
+    
+    
+    <!--</Grid>
+</ContentPage>-->

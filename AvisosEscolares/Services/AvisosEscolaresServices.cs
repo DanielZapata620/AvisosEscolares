@@ -85,6 +85,16 @@ namespace AvisosEscolares.Services
         //    }
         //}
 
+        public async Task<List<AvisoGeneralAlumnoDTO>> ObtenerAvisosGeneralesPorAlumno(int alumnoId)
+        {
+            var response = await client.GetAsync($"api/avisos/generales/{alumnoId}");
+            if (response.IsSuccessStatusCode)
+            {
+                return await response.Content.ReadFromJsonAsync<List<AvisoGeneralAlumnoDTO>>();
+            }
+            return new List<AvisoGeneralAlumnoDTO>();
+        }
+
         public async Task MarcarAvisosPersonalesLeidos(List<int> avisoIds, int alumnoId)
         {
             var response = await client.PutAsJsonAsync($"api/avisos/personal/marcarleidos/{alumnoId}", avisoIds);
@@ -101,6 +111,15 @@ namespace AvisosEscolares.Services
                 return await response.Content.ReadFromJsonAsync<List<AvisoPersonalDetallesMaestroDTO>>();
             }
             return new List<AvisoPersonalDetallesMaestroDTO>();
+        }
+
+        public async Task<AvisoPersonalListaAlumnoDTO> ObtenerAvisoPersonalAlumno(int idAviso) { 
+            var response = await client.GetAsync($"api/avisos/personal/alumno/{idAviso}");
+            if (response.IsSuccessStatusCode)
+            {
+                return await response.Content.ReadFromJsonAsync<AvisoPersonalListaAlumnoDTO>();
+            }
+            return null;
         }
 
         public async Task CrearAlumno(AlumnoCreateDTO dto)

@@ -20,7 +20,10 @@ namespace AvisosEscolares.Viewmodels
         public ObservableCollection<AvisoPersonalDetallesMaestroDTO> AvisosPersonales { get; set; } = new();
         public ObservableCollection<AlumnoDetallesListaDTO> ListaAlumnos { get; set; } = new();
         public ObservableCollection<AvisoPersonalListaAlumnoDTO> ListaAvisosPersonales { get; set; } = new();
+        public ObservableCollection<AvisoGeneralAlumnoDTO> ListaAvisosGenerales { get; set; } = new();
         public int CantAvisosPersonalesNuevos { get; set; }
+        public int CantAvisosGeneralesNuevos { get; set; }
+        public AvisoPersonalListaAlumnoDTO AvisoPersonalSeleccionadoAlumno { get; set; }
 
         public MaestroDTO maestro { get; set; }
 
@@ -40,6 +43,7 @@ namespace AvisosEscolares.Viewmodels
 
         public ICommand AgregarAlumnoCommand{ get; set; }
         public ICommand VerListaAlumnosCommand { get; set; }
+        public ICommand VerAvisoPersonalAlumnoCommand { get; set; }
 
         public ICommand CrearAvisoGeneralCommand { get; set; }
         public ICommand CrearAvisoPersonalCommand { get; set; }
@@ -67,22 +71,70 @@ namespace AvisosEscolares.Viewmodels
             CrearAvisoPersonalCommand = new Command(CrearAvisoPersonal);
             VerListaAlumnosCommand = new Command(VerListaAlumnos);
             AgregarAlumnoCommand = new Command(AgregarAlumno);
-            MostrarAvisosPersonalesAlumnoCommand = new Command(MostrarAvisosPersonalesAlumno);
+            MostrarAvisosPersonalesAlumnoCommand = new Command<string>(MostrarAvisosPersonalesAlumno);
+            VerAvisoPersonalAlumnoCommand= new Command<int>(VerAvisoPersonalAlumno);
         }
 
-        private async void MostrarAvisosPersonalesAlumno()
+        private async void VerAvisoPersonalAlumno(int idaviso)
         {
-            ListaAvisosPersonales.Clear();
-            var avisos = await service.ObtenerAvisosPersonalesAlumno(alumno.Id);
-         
-            foreach (var aviso in avisos)
+            var aviso = await service.ObtenerAvisoPersonalAlumno(idaviso);
+            if (aviso != null)
             {
-                ListaAvisosPersonales.Add(aviso);
+                AvisoPersonalSeleccionadoAlumno = aviso;
+                PropertyChanged?.Invoke(this, new(nameof(AvisoPersonalSeleccionadoAlumno)));
+                // Navegar a la página de detalles del aviso
+                await Shell.Current.GoToAsync("VerAvisoPersonalAlumnoCommand");
             }
-            var avisosNuevos = avisos.Where(a => a.Estado == "Nuevo").Select(a => a.AvisoId).ToList();
-            CantAvisosPersonalesNuevos = avisosNuevos.Count;
-            PropertyChanged?.Invoke(this,new(nameof(CantAvisosPersonalesNuevos)));
-            await service.MarcarAvisosPersonalesLeidos(avisosNuevos, alumno.Id);
+        }
+
+        private async void MostrarAvisosPersonalesAlumno(string lista)
+        {
+            ListaAvisosGenerales.Clear();
+            ListaAvisosPersonales.Clear();
+            if (lista == "Generales")
+            {
+               
+                var avisosGenerales = await service.ObtenerAvisosGeneralesPorAlumno(alumno.Id);
+                foreach (var aviso in avisosGenerales)
+                {
+                    ListaAvisosGenerales.Add(aviso);
+                }
+                var avisosNuevos = avisosGenerales.Where(a => a.Estado == "Nuevo").Select(a => a.AvisoId).ToList();
+                CantAvisosGeneralesNuevos = avisosNuevos.Count;
+                PropertyChanged?.Invoke(this, new(nameof(CantAvisosGeneralesNuevos)));
+
+                var avisosPerosnales = await service.ObtenerAvisosPersonalesAlumno(alumno.Id);
+                CantAvisosPersonalesNuevos = avisosPerosnales.Where(a => a.Estado == "Nuevo").Count();
+            
+                PropertyChanged?.Invoke(this, new(nameof(CantAvisosPersonalesNuevos)));
+                await service.MarcarAvisosPersonalesLeidos(avisosNuevos, alumno.Id);
+
+
+
+            }
+            else
+            {
+
+                
+                var avisos = await service.ObtenerAvisosPersonalesAlumno(alumno.Id);
+
+                foreach (var aviso in avisos)
+                {
+                    ListaAvisosPersonales.Add(aviso);
+                }
+                var avisosNuevos = avisos.Where(a => a.Estado == "Nuevo").Select(a => a.AvisoId).ToList();
+                CantAvisosPersonalesNuevos = avisosNuevos.Count;
+                PropertyChanged?.Invoke(this, new(nameof(CantAvisosPersonalesNuevos)));
+                var avisosGenerales = await service.ObtenerAvisosGeneralesPorAlumno(alumno.Id);
+                CantAvisosGeneralesNuevos = avisosGenerales.Where(a => a.Estado == "Nuevo").Count();
+                
+                PropertyChanged?.Invoke(this, new(nameof(CantAvisosGeneralesNuevos)));
+
+
+                await service.MarcarAvisosPersonalesLeidos(avisosNuevos, alumno.Id);
+            }
+
+
 
         }
 

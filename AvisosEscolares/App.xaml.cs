@@ -16,8 +16,7 @@ namespace AvisosEscolares
             Routing.RegisterRoute("crearAvisoPersonal", typeof(AgregarAvisoPersonalView));
             Routing.RegisterRoute("avisosPersonalesMaestro", typeof(AvisosPersonalesMaestro));
             Routing.RegisterRoute("dashboardAlumno", typeof(AlumnoDasboardPage));
-
-
+            Routing.RegisterRoute("verAvisoPersonalAlumno", typeof(VerAvisoPersonalAlumnoPage));
         }
 
         protected override Window CreateWindow(IActivationState? activationState)

@@ -52,19 +52,19 @@ namespace AvisosEscolaresApi.Services
 
         public List<AvisoPersonalListaAlumnoDTO> ObtenerAvisosPersonalesAlumno(int id)
         {
-            var avisos = EstadoRepo.Query().Include(x => x.Aviso).ThenInclude(x => x.Avisopersonal).ThenInclude(x => x.Maestro).Include(x => x.Estado).Where(x => x.AlumnoId == id);
+            var avisos = EstadoRepo.Query().Include(x => x.Aviso).ThenInclude(x => x.Avisopersonal).ThenInclude(x => x.Maestro).Include(x => x.Estado).Where(x => x.AlumnoId == id && x.Aviso.TipoAvisoId == 2);
             return avisos.Select(a => Mapper.Map<AvisoPersonalListaAlumnoDTO>(a)).ToList();
         }
 
         public AvisoPersonalAlumnoDTO ObtenerAvisoPersonalAlumno(int id)
         {
-            var aviso = EstadoRepo.Query().Include(x => x.Aviso).ThenInclude(x => x.Avisopersonal).ThenInclude(x => x.Maestro).Include(x => x.Estado).FirstOrDefault(x => x.AvisoId == id);
+            var aviso = EstadoRepo.Query().Include(x => x.Aviso).ThenInclude(x => x.Avisopersonal).ThenInclude(x => x.Maestro).Include(x => x.Estado).FirstOrDefault(x => x.AvisoId == id );
             return Mapper.Map<AvisoPersonalAlumnoDTO>(aviso);
         }
 
         public void MarcarAvisosComoLeido(List<int> avisoId, int alumnoId)
         {
-            var estados = EstadoRepo.Query().Where(e => e.AlumnoId == alumnoId).ToList();
+            var estados = EstadoRepo.Query().Where(e => e.AlumnoId == alumnoId && avisoId.Contains(e.AvisoId)).ToList();
             foreach (var estado in estados)
             {
                 if (estado.EstadoId == 1)
@@ -130,13 +130,59 @@ namespace AvisosEscolaresApi.Services
             EstadoRepo.Insert(estado);
         }
 
-        public void ObtenerAvisosGeneralesVigentesAlumno(int alumnoId)
+        public List<AvisoGeneralListaAlumnoDTO> ObtenerAvisosGeneralesVigentesAlumno(int alumnoId)
         {
-            var avisos = AvisoRepo.GetAll().Where(a => a.TipoAvisoId == 1 && a.Avisogeneral.FechaCaducidad >= DateTime.Now);
-            var ultimoavisoAlumno = EstadoRepo.Query().e => e.AlumnoId == alumnoId);
-           
+            var ahora = DateTime.Now;
 
+            // 1. Obtener último aviso del alumno (solo generales)
+            var ultimoAvisoAlumno = EstadoRepo.Query()
+                .Where(e => e.AlumnoId == alumnoId && e.Aviso.TipoAvisoId == 1)
+                .OrderByDescending(e => e.Aviso.FechaCreacion)
+                .Select(e => e.Aviso.FechaCreacion)
+                .FirstOrDefault();
 
+            // 2. Query base de avisos generales vigentes
+            var avisosQuery = AvisoRepo.Query()
+                .Where(a => a.TipoAvisoId == 1 && a.Avisogeneral.FechaCaducidad >= ahora);
+
+            List<Aviso> avisosNuevos;
+
+            // 3. Decisión
+            if (ultimoAvisoAlumno == null)
+            {
+                // No tiene avisos → traer todos
+                avisosNuevos = avisosQuery.ToList();
+            }
+            else
+            {
+                // Solo los posteriores
+                avisosNuevos = avisosQuery
+                    .Where(a => a.FechaCreacion > ultimoAvisoAlumno)
+                    .ToList();
+            }
+
+            // 4. Insertar si hay nuevos
+            if (avisosNuevos.Any())
+            {
+                var nuevos = avisosNuevos.Select(a => new Avisoalumnoestado
+                {
+                    AvisoId = a.Id,
+                    AlumnoId = alumnoId,
+                    EstadoId = 1, // Nuevo
+                    FechaLeido = null
+                }).ToList();
+
+                EstadoRepo.InsertRange(nuevos);
+            }
+
+            // 5. Obtener resultado final
+            var resultado = EstadoRepo.Query().Include(x=>x.Estado).Include(x=>x.Aviso).ThenInclude(x=>x.Avisogeneral)
+                .Where(e => e.AlumnoId == alumnoId && e.Aviso.TipoAvisoId == 1)
+                .OrderByDescending(e => e.Aviso.FechaCreacion)
+                .ToList();
+
+            // 6. AutoMapper
+            return Mapper.Map<List<AvisoGeneralListaAlumnoDTO>>(resultado);
         }
     }
 }

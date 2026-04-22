@@ -75,6 +75,14 @@ namespace AvisosEscolaresApi.Mappers
                 s.Aviso.Avisopersonal.Maestro.Nombre
             ));
 
+            CreateMap<Avisoalumnoestado, AvisoGeneralListaAlumnoDTO>()
+            .ForMember(d => d.AvisoId, o => o.MapFrom(s => s.Aviso.Id))
+            .ForMember(d => d.Titulo, o => o.MapFrom(s => s.Aviso.Titulo))
+            .ForMember(d => d.Mensaje, o => o.MapFrom(s => s.Aviso.Mensaje))
+            .ForMember(d => d.FechaLeido, o => o.MapFrom(s => s.FechaLeido))
+            .ForMember(d => d.Estado, o => o.MapFrom(s =>
+                s.Estado.Nombre))
+            .ForMember(d => d.FechaCaducidad, o => o.MapFrom(s => s.Aviso.Avisogeneral.FechaCaducidad));
 
         }
 
