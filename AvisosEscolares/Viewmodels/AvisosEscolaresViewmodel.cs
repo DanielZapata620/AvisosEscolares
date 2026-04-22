@@ -3,13 +3,14 @@ using AvisosEscolares.Services;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
 
 namespace AvisosEscolares.Viewmodels
 {
-    public class AvisosEscolaresViewmodel
+    public class AvisosEscolaresViewmodel: INotifyPropertyChanged
     {
 
         public LoginDTO LoginDTO { get; set; } = new LoginDTO();
@@ -18,6 +19,8 @@ namespace AvisosEscolares.Viewmodels
 
         public ObservableCollection<AvisoPersonalDetallesMaestroDTO> AvisosPersonales { get; set; } = new();
         public ObservableCollection<AlumnoDetallesListaDTO> ListaAlumnos { get; set; } = new();
+        public ObservableCollection<AvisoPersonalListaAlumnoDTO> ListaAvisosPersonales { get; set; } = new();
+        public int CantAvisosPersonalesNuevos { get; set; }
 
         public MaestroDTO maestro { get; set; }
 
@@ -46,8 +49,12 @@ namespace AvisosEscolares.Viewmodels
 
         public ICommand MostrarCrearAvisoPersonalCommand { get; set; }
         public ICommand MostrarAvisosPersonalesMaestroCommand { get; set; }
+        public ICommand MostrarAvisosPersonalesAlumnoCommand { get; set; }
+
 
         AvisosEscolaresServices service = new();
+
+        public event PropertyChangedEventHandler? PropertyChanged;
 
         public AvisosEscolaresViewmodel()
         {
@@ -60,7 +67,30 @@ namespace AvisosEscolares.Viewmodels
             CrearAvisoPersonalCommand = new Command(CrearAvisoPersonal);
             VerListaAlumnosCommand = new Command(VerListaAlumnos);
             AgregarAlumnoCommand = new Command(AgregarAlumno);
+            MostrarAvisosPersonalesAlumnoCommand = new Command(MostrarAvisosPersonalesAlumno);
         }
+
+        private async void MostrarAvisosPersonalesAlumno()
+        {
+            ListaAvisosPersonales.Clear();
+            var avisos = await service.ObtenerAvisosPersonalesAlumno(alumno.Id);
+         
+            foreach (var aviso in avisos)
+            {
+                ListaAvisosPersonales.Add(aviso);
+            }
+            var avisosNuevos = avisos.Where(a => a.Estado == "Nuevo").Select(a => a.AvisoId).ToList();
+            CantAvisosPersonalesNuevos = avisosNuevos.Count;
+            PropertyChanged?.Invoke(this,new(nameof(CantAvisosPersonalesNuevos)));
+            await service.MarcarAvisosPersonalesLeidos(avisosNuevos, alumno.Id);
+
+        }
+
+       
+        
+            
+        
+        
 
         private async void MostrarCrearAvisoPersonal(int idAlumno)
         {
@@ -137,8 +167,9 @@ namespace AvisosEscolares.Viewmodels
             var result = await service.Login(LoginDTO);
             if(result.Rol== "Alumno")
             {
-                // Navegar a la vista del alumno
+                
                alumno = result.Alumno;
+                await Shell.Current.GoToAsync("dashboardAlumno");
             }
             else if(result.Rol == "Maestro")
             {

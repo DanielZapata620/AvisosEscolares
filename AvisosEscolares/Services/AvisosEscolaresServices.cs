@@ -48,6 +48,16 @@ namespace AvisosEscolares.Services
             return new List<AvisoGeneralDetallesMaestroDTO>();
         }
 
+        public async Task<List<AvisoPersonalListaAlumnoDTO>> ObtenerAvisosPersonalesAlumno(int alumnoId)
+        {
+            var response = await client.GetAsync($"api/avisos/personales/alumno/{alumnoId}");
+            if (response.IsSuccessStatusCode)
+            {
+                return await response.Content.ReadFromJsonAsync<List<AvisoPersonalListaAlumnoDTO>>();
+            }
+            return new List<AvisoPersonalListaAlumnoDTO>();
+        }
+
         public async Task CrearAvisoGeneral(CrearAvisoGeneralDto dto)
         {
             var response = await client.PostAsJsonAsync("api/avisos/general", dto);
@@ -66,6 +76,23 @@ namespace AvisosEscolares.Services
             }
         }
 
+        //public async Task MarcarAvisoPersonalComoLeido(int alumnoId, int avisoId)
+        //{
+        //    var response = await client.PostAsync($"api/avisos/personal/marcar-leido?alumnoId={alumnoId}&avisoId={avisoId}", null);
+        //    if (!response.IsSuccessStatusCode)
+        //    {
+        //        // Manejar error
+        //    }
+        //}
+
+        public async Task MarcarAvisosPersonalesLeidos(List<int> avisoIds, int alumnoId)
+        {
+            var response = await client.PutAsJsonAsync($"api/avisos/personal/marcarleidos/{alumnoId}", avisoIds);
+            if (!response.IsSuccessStatusCode)
+            {
+                // Manejar error
+            }
+        }
         public async Task<List<AvisoPersonalDetallesMaestroDTO>> ObtenerAvisosPersonalesPorAlumno(int alumnoId)
         {
             var response = await client.GetAsync($"api/avisos/personales/alumno/{alumnoId}");

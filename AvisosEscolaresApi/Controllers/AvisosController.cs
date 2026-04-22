@@ -45,7 +45,7 @@ namespace AvisosEscolaresApi.Controllers
         }
 
 
-        [HttpPut("marcarleidos/{alumnoId}")]
+        [HttpPut("personal/marcarleidos/{alumnoId}")]
         public IActionResult MarcarComoLeidos([FromBody] List<int> ids, int alumnoId)
         {
             Service.MarcarAvisosComoLeido(ids, alumnoId);

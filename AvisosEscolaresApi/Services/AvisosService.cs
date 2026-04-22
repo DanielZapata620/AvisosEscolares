@@ -34,7 +34,7 @@ namespace AvisosEscolaresApi.Services
         public List<AvisoGeneralDetallesMaestroDTO> ObtenerAvisosGeneralesVigentes()
         {
 
-            var avisos = AvisoRepo.Query().Include(x => x.Avisogeneral).Include(a => a.Avisoalumnoestado).ThenInclude(e => e.Estado).Where(a => a.TipoAvisoId == 1 && a.Avisogeneral.FechaCaducidad>=DateTime.Now);
+            var avisos = AvisoRepo.Query().Include(x => x.Avisogeneral).Include(a => a.Avisoalumnoestado).ThenInclude(e => e.Estado).Where(a => a.TipoAvisoId == 1 && a.Avisogeneral.FechaCaducidad >= DateTime.Now);
             foreach (var a in avisos)
             {
                 Console.WriteLine(a.Avisoalumnoestado.Count);
@@ -46,13 +46,13 @@ namespace AvisosEscolaresApi.Services
 
         public List<AvisoPersonalDetallesMaestroDTO> ObtenerAvisosPersonales(int id)
         {
-            var avisos = EstadoRepo.Query().Include(x => x.Aviso).Include(x=>x.Estado).Where(x => x.AlumnoId == id);
+            var avisos = EstadoRepo.Query().Include(x => x.Aviso).Include(x => x.Estado).Where(x => x.AlumnoId == id);
             return avisos.Select(a => Mapper.Map<AvisoPersonalDetallesMaestroDTO>(a)).ToList();
         }
 
         public List<AvisoPersonalListaAlumnoDTO> ObtenerAvisosPersonalesAlumno(int id)
         {
-            var avisos = EstadoRepo.Query().Include(x => x.Aviso).ThenInclude(x=>x.Avisopersonal).ThenInclude(x=>x.Maestro).Include(x => x.Estado).Where(x => x.AlumnoId == id);
+            var avisos = EstadoRepo.Query().Include(x => x.Aviso).ThenInclude(x => x.Avisopersonal).ThenInclude(x => x.Maestro).Include(x => x.Estado).Where(x => x.AlumnoId == id);
             return avisos.Select(a => Mapper.Map<AvisoPersonalListaAlumnoDTO>(a)).ToList();
         }
 
@@ -73,7 +73,7 @@ namespace AvisosEscolaresApi.Services
                     estado.FechaLeido = DateTime.Now; // Registra la fecha de lectura
                     EstadoRepo.Update(estado);
                 }
-                
+
             }
         }
 
@@ -86,40 +86,40 @@ namespace AvisosEscolaresApi.Services
                 estado.FechaLeido = DateTime.Now; // Registra la fecha de lectura
                 EstadoRepo.Update(estado);
             }
-          
+
         }
 
-                    
+
 
 
         public void CrearAvisoGeneral(CrearAvisoGeneralDto dto)
         {
-           
+
             var aviso = Mapper.Map<Aviso>(dto);
             AvisoRepo.Insert(aviso);
 
-           
+
             var avisoGeneral = Mapper.Map<Avisogeneral>(dto);
             avisoGeneral.AvisoId = aviso.Id;
 
             AvisoGeneralRepo.Insert(avisoGeneral);
 
-            
+
         }
 
         public void CrearAvisoPersonal(CrearAvisoPersonalDto dto)
         {
-            
+
             var aviso = Mapper.Map<Aviso>(dto);
             AvisoRepo.Insert(aviso);
 
-           
+
             var avisoPersonal = Mapper.Map<Avisopersonal>(dto);
             avisoPersonal.AvisoId = aviso.Id;
 
             AvisoPersonalRepo.Insert(avisoPersonal);
 
-            
+
             var estado = new Avisoalumnoestado
             {
                 AvisoId = aviso.Id,
@@ -130,5 +130,13 @@ namespace AvisosEscolaresApi.Services
             EstadoRepo.Insert(estado);
         }
 
+        public void ObtenerAvisosGeneralesVigentesAlumno(int alumnoId)
+        {
+            var avisos = AvisoRepo.GetAll().Where(a => a.TipoAvisoId == 1 && a.Avisogeneral.FechaCaducidad >= DateTime.Now);
+            var ultimoavisoAlumno = EstadoRepo.Query().e => e.AlumnoId == alumnoId);
+           
+
+
+        }
     }
 }
