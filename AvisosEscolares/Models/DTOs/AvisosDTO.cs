@@ -50,7 +50,7 @@
 
     }
 
-    public class AvisoGeneralAlumnoDTO
+    public class AvisoGeneralListaAlumnoDTO
     {
         public int AvisoId { get; set; }
         public string Titulo { get; set; }
@@ -62,4 +62,5 @@
 
         public DateTime FechaCaducidad { get; set; }
     }
+
 }

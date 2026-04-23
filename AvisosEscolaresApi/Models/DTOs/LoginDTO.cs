@@ -10,6 +10,7 @@
 
     public class LoginResponseDTO
     {
+        public string Token { get; set; } = null!;
         public string Rol { get; set; } = null!;
         public AlumnoDTO? Alumno { get; set; }
         public MaestroDTO? Maestro { get; set; }

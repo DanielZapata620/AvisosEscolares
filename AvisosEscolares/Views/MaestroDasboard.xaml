@@ -4,112 +4,105 @@
              Shell.NavBarIsVisible="False"
              BackgroundColor="#E6E6E6">
 
-    <VerticalStackLayout Padding="20" Spacing="40">
-
-        <!-- HEADER -->
-        <Border StrokeShape="RoundRectangle 15"
-                BackgroundColor="#5B3F99">
-
-            <Grid RowDefinitions="Auto,Auto"
-                  ColumnDefinitions="*,Auto">
-
-                <!-- TÍTULO -->
-                <Label
-                    Grid.Row="0"
-                    Grid.ColumnSpan="2"
-                    Text="GESTION AVISOS ESCOLARES"
-                    BackgroundColor="#3D2A63"
-                    TextColor="White"
-                    FontAttributes="Bold"
-                    HorizontalTextAlignment="Center"
-                    Padding="18"
-                    FontSize="16"/>
-
-                <!-- CONTENIDO -->
-                <VerticalStackLayout
-                    Grid.Row="1"
-                    Grid.Column="0"
-                    Padding="18,15"
-                    Spacing="3">
-
-                    <Label HorizontalTextAlignment="Center" TextColor="White" FontSize="16">
-                        <Label.FormattedText>
-                            <FormattedString>
-                                <Span Text="BIENVENIDO " FontAttributes="Bold"/>
-                                <Span Text="{Binding maestro.Nombre}"
-                                      FontAttributes="Bold"
-                                      TextTransform="Uppercase"/>
-                            </FormattedString>
-                        </Label.FormattedText>
-                    </Label>
-
-                    <Label
-                        Text="{Binding maestro.GrupoNombre}"
-                        TextColor="White"
-                        FontAttributes="Bold"
-                        FontSize="16"/>
-                </VerticalStackLayout>
-
-                <!-- ICONO -->
-                <Image
-                    Grid.Row="1"
-                    Grid.Column="1"
-                    Source="logout.png"
-                    WidthRequest="26"
-                    HeightRequest="26"
-                    Margin="0,0,18,0"
-                    VerticalOptions="Center"/>
-
-            </Grid>
+    <Grid RowDefinitions="Auto,Auto,*" BackgroundColor="#F4F7FB">
+    <Grid ColumnDefinitions="auto,*,auto" ColumnSpacing="12" Background="#0F2D5E" Padding="10,25,10,10">
+        <Border WidthRequest="50" HeightRequest="50" BackgroundColor="#0EA5A0" Stroke="#0C7A76">
+            <Border.StrokeShape>
+                <RoundRectangle CornerRadius="25"></RoundRectangle>
+            </Border.StrokeShape>
+            <Label Text="A" TextColor="White" HorizontalOptions="Center" VerticalOptions="Center" FontSize="20" FontAttributes="Bold"></Label>
         </Border>
 
-        <!-- BOTÓN -->
-        <Border StrokeShape="RoundRectangle 20"
-                BackgroundColor="#5B3F99"
-                HeightRequest="65"
-                Padding="20,0">
+        <VerticalStackLayout Grid.Column="1">
+            <Label Text="Docente" FontSize="12" TextColor="#80FFFFFF"></Label>
+            <Label Text="{Binding maestro.Nombre}" FontSize="15" FontAttributes="Bold" TextColor="White"></Label>
+            <Label Text="Bachillerato General" FontSize="12" TextColor="#70FFFFFF"></Label>
+        </VerticalStackLayout>
+
+        <Border Grid.Column="2" WidthRequest="36" HeightRequest="36" BackgroundColor="#20FFFFFF">
+            <Border.StrokeShape>
+                <RoundRectangle CornerRadius="18"></RoundRectangle>
+            </Border.StrokeShape>
 
             <Border.GestureRecognizers>
-                <TapGestureRecognizer Command="{Binding VerListaAlumnosCommand}" />
+                <TapGestureRecognizer Command="{Binding LogoutCommand}"></TapGestureRecognizer>
             </Border.GestureRecognizers>
 
-            <HorizontalStackLayout Spacing="20"
-                                   VerticalOptions="Center">
-
-                <Image Source="users.png" WidthRequest="32"/>
-
-                <Label
-                    Text="LISTA DE ALUMNOS"
-                    TextColor="White"
-                    FontAttributes="Bold"
-                    FontSize="16"
-                    VerticalOptions="Center"/>
-            </HorizontalStackLayout>
+            <Image Source="logout.png" WidthRequest="20" HeightRequest="20" HorizontalOptions="Center" VerticalOptions="Center"></Image>
         </Border>
 
-        <!-- BOTÓN -->
-        <Border StrokeShape="RoundRectangle 20"
-                BackgroundColor="#5B3F99"
-                HeightRequest="65"
-                Padding="20,0">
+    </Grid>
 
-            <Border.GestureRecognizers>
-                <TapGestureRecognizer Command="{Binding MostrarAvisosGeneralesMaestroCommand}" />
-            </Border.GestureRecognizers>
+    <Grid Grid.Row="2">
+        <ScrollView>
+            <VerticalStackLayout Spacing="15">
+                <Border Margin="16" BackgroundColor="White" Stroke="#E5EAF0">
+                    <Border.StrokeShape>
+                        <RoundRectangle CornerRadius="16"></RoundRectangle>
+                    </Border.StrokeShape>
 
-            <HorizontalStackLayout Spacing="20"
-                                   VerticalOptions="Center">
+                    <VerticalStackLayout>
+                        <Grid BackgroundColor="#0F2D5E" Padding="15" ColumnDefinitions="Auto,*">
+                            <Image Source="colegio.png" WidthRequest="30" HeightRequest="30" Margin="0,0,10,0"></Image>
 
-                <Image Source="message.png" WidthRequest="32"/>
+                            <VerticalStackLayout Grid.Column="1" VerticalOptions="Center">
+                                <Label Text="CETIS No. 12 · Monclova" TextColor="White" FontAttributes="Bold"
+                                       FontSize="14"></Label>
+                                <Label Text="Panel del docente" TextColor="#80FFFFFF" FontSize="11"></Label>
+                            </VerticalStackLayout>
+                        </Grid>
 
-                <Label
-                    Text="AVISOS GENERALES"
-                    TextColor="White"
-                    FontAttributes="Bold"
-                    FontSize="16"
-                    VerticalOptions="Center"/>
-            </HorizontalStackLayout>
-        </Border>
+                        <Grid ColumnDefinitions="*,*" Padding="14">
 
-    </VerticalStackLayout>
+                            <VerticalStackLayout HorizontalOptions="Center">
+                                <Label Text="Grupo" TextColor="#6B7A90" FontAttributes="Bold" FontSize="12"
+                                       HorizontalTextAlignment="Center"></Label>
+                                <Label Text="{Binding maestro.GrupoNombre}" TextColor="#0F1A2B" FontSize="14" HorizontalTextAlignment="Center"></Label>
+                            </VerticalStackLayout>
+
+                            <VerticalStackLayout Grid.Column="1" HorizontalOptions="Center">
+                                <Label Text="Turno" TextColor="#6B7A90" FontAttributes="Bold"
+                                       FontSize="12"
+                                       HorizontalTextAlignment="Center"></Label>
+                                <Label Text="Matutino" TextColor="#0F1A2B" FontSize="14"></Label>
+                            </VerticalStackLayout>
+                        </Grid>
+                    </VerticalStackLayout>
+                </Border>
+
+                <Border Margin="16,0" BackgroundColor="White" Stroke="#E5EAF0" Padding="15">
+                    <Border.StrokeShape>
+                        <RoundRectangle CornerRadius="16"></RoundRectangle>
+                    </Border.StrokeShape>
+
+                    <Border.GestureRecognizers>
+                        <TapGestureRecognizer Command="{Binding VerListaAlumnosCommand}"></TapGestureRecognizer>
+                    </Border.GestureRecognizers>
+
+                    <Grid ColumnDefinitions="Auto,*,Auto">
+                        <Image Source="usuarios.png" WidthRequest="25" HeightRequest="25" Margin="0,0,10,0"></Image>
+                        <Label Grid.Column="1" Text="Lista de alumnos" FontAttributes="Bold" FontSize="14" VerticalOptions="Center" TextColor="#0F1A2B"></Label>
+                        <Label Grid.Column="2" Text="›" FontSize="20" TextColor="#A0AFBF" VerticalOptions="Center"></Label>
+                    </Grid>
+                </Border>
+
+                <Border Margin="16,0,16,10" BackgroundColor="White" Stroke="#E5EAF0" Padding="16">
+                    <Border.StrokeShape>
+                        <RoundRectangle CornerRadius="16"></RoundRectangle>
+                    </Border.StrokeShape>
+
+                    <Border.GestureRecognizers>
+                        <TapGestureRecognizer Command="{Binding MostrarAvisosGeneralesMaestroCommand}"/>
+                    </Border.GestureRecognizers>
+
+                    <Grid ColumnDefinitions="Auto,*,Auto">
+                        <Image Source="mensaje.png" WidthRequest="25" HeightRequest="25" Margin="0,0,10,0"></Image>
+                        <Label Grid.Column="1" Text="Avisos generales" FontAttributes="Bold" FontSize="14" VerticalOptions="Center" TextColor="#0F1A2B"></Label>
+                        <Label Grid.Column="2" Text="›" FontSize="20" TextColor="#A0AFBF" VerticalOptions="Center"></Label>
+                    </Grid>
+                </Border>
+            </VerticalStackLayout>
+        </ScrollView>
+    </Grid>
+    </Grid>
 </ContentPage>

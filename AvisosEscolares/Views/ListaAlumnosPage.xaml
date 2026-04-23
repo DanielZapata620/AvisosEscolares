@@ -2,103 +2,123 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="AvisosEscolares.Views.ListaAlumnosPage"
-             Title="ListaAlumnosPage" BackgroundColor="White">
+             Title="ListaAlumnosPage" BackgroundColor="White" Shell.NavBarIsVisible="False">
 
 
 
-    <Grid RowDefinitions="Auto, Auto, *">
+    <Grid RowDefinitions="Auto,Auto,*" BackgroundColor="#F4F7FB">
+        <Grid ColumnDefinitions="auto,*,auto" ColumnSpacing="12" Background="#0F2D5E" Padding="10,25,10,10">
+            <Border WidthRequest="50" HeightRequest="50" BackgroundColor="#0EA5A0" Stroke="#0C7A76">
+                <Border.StrokeShape>
+                    <RoundRectangle CornerRadius="25"></RoundRectangle>
+                </Border.StrokeShape>
+                <Label Text="A" TextColor="White" HorizontalOptions="Center" VerticalOptions="Center" FontSize="20" FontAttributes="Bold"></Label>
+            </Border>
 
-        <BoxView Grid.Row="0" Color="#2D214F" HeightRequest="60" />
-        <Label Grid.Row="0" 
-               Text="GESTIÓN DE ALUMNOS" 
-               TextColor="White" 
-               FontSize="16" 
-               FontAttributes="Bold"
-               FontFamily="OpenSansSemiBold"
-               HorizontalOptions="Center" 
-               VerticalOptions="Center" />
+            <VerticalStackLayout Grid.Column="1">
+                <Label Text="Docente" FontSize="12" TextColor="#80FFFFFF"></Label>
+                <Label Text="{Binding maestro.Nombre}" FontSize="15" FontAttributes="Bold" TextColor="White"></Label>
+                <Label Text="Bachillerato General" FontSize="12" TextColor="#70FFFFFF"></Label>
+            </VerticalStackLayout>
 
-        <Grid Grid.Row="1" 
-              Margin="20,15" 
-              ColumnDefinitions="60, *" 
-              ColumnSpacing="10">
+            <Border Grid.Column="2" WidthRequest="36" HeightRequest="36" BackgroundColor="#20FFFFFF">
+                <Border.StrokeShape>
+                    <RoundRectangle CornerRadius="18"></RoundRectangle>
+                </Border.StrokeShape>
 
-            <Button Grid.Column="0"
-                    ImageSource="back_arrow.png"
-                    BackgroundColor="#513B94" 
-                    CornerRadius="10"
-                    HeightRequest="45"
-                    Padding="0" />
+                <Border.GestureRecognizers>
+                    <TapGestureRecognizer Command="{Binding LogoutCommand}"></TapGestureRecognizer>
+                </Border.GestureRecognizers>
 
-            <Button Grid.Column="1"
-                    Text="+  AGREGAR ALUMNO" 
-                    TextColor="White" 
-                    FontSize="12"
-                    FontAttributes="Bold"
-                    FontFamily="OpenSansSemiBold"
-                    BackgroundColor="#513B94" 
-                    CornerRadius="10"
-                    HeightRequest="45"
-                    Command="{Binding CambiarVistaCommand}" 
-                    CommandParameter="AgregarAlumno" />
+                <Image Source="logout.png" WidthRequest="20" HeightRequest="20" HorizontalOptions="Center" VerticalOptions="Center"></Image>
+            </Border>
+
         </Grid>
 
-        <Border Grid.Row="2" 
-                Margin="20,0,20,20" 
-                Padding="0" 
-                Stroke="#333333"
-                StrokeThickness="1"
-                VerticalOptions="Start">
+        <Grid Grid.Row="1">
+            <ScrollView>
+                <VerticalStackLayout>
+                    <Border Margin="5" BackgroundColor="White" Stroke="#E5EAF0">
+                        <Border.StrokeShape>
+                            <RoundRectangle CornerRadius="16"></RoundRectangle>
+                        </Border.StrokeShape>
 
-            <Border.StrokeShape>
-                <RoundRectangle CornerRadius="8" />
-            </Border.StrokeShape>
+                        <VerticalStackLayout>
+                            <Grid ColumnDefinitions="auto,*,auto" BackgroundColor="#0F2D5E" Padding="15">
+                                <Button Text="⟵" TextColor="White" BackgroundColor="#50000000" Command="{Binding CambiarVistaCommand}" CommandParameter="dashboardMaestro"></Button>
+                                <Label Grid.Column="1" Text="GESTIÓN DE ALUMNOS" FontAttributes="Bold" HorizontalTextAlignment="Center" VerticalTextAlignment="Center"></Label>
+                                <Button Grid.Column="2" Text="➕" TextColor="White" BackgroundColor="#50000000" Command="{Binding CambiarVistaCommand}" CommandParameter="AgregarAlumno"></Button>
+                            </Grid>
+                        </VerticalStackLayout>
+                    </Border>
+                </VerticalStackLayout>
+            </ScrollView>
+        </Grid>
 
-            <Grid RowDefinitions="45, Auto">
-                <Grid Grid.Row="0" BackgroundColor="#513B94" ColumnDefinitions="80, *, 100">
-                    <Label Text="MATRICULA" TextColor="White" VerticalOptions="Center" HorizontalOptions="Center" FontSize="10" FontAttributes="Bold" FontFamily="OpenSansSemiBold"/>
-                    <Label Grid.Column="1" Text="NOMBRE" TextColor="White" VerticalOptions="Center" Margin="5,0" FontSize="10" FontAttributes="Bold" FontFamily="OpenSansSemiBold"/>
-                    <Label Grid.Column="2" Text="ACCIONES" TextColor="White" VerticalOptions="Center" HorizontalOptions="Center" FontSize="10" FontAttributes="Bold" FontFamily="OpenSansSemiBold"/>
-                </Grid>
+        <Grid Grid.Row="2">
+            <VerticalStackLayout>
+                <Border Margin="16,10,16,0" BackgroundColor="White" Stroke="#E5EAF0" Padding="12">
+                    <Border.StrokeShape>
+                        <RoundRectangle CornerRadius="15"></RoundRectangle>
+                    </Border.StrokeShape>
 
-                <CollectionView Grid.Row="1" x:Name="AlumnosCollection" SelectionMode="None" ItemsSource="{Binding ListaAlumnos}">
+                    <Grid ColumnDefinitions="auto,*" ColumnSpacing="10">
+                        <Image Source="search.png" WidthRequest="20" HeightRequest="20"></Image>
+                        <Entry Grid.Column="1" Placeholder="Buscar alumno....." FontSize="14" TextColor="#0F1A2B" PlaceholderColor="#A0AFBF" BackgroundColor="Transparent" Text="{Binding TextoBusqueda}"></Entry>
+                    </Grid>
+                </Border>
+
+                <CollectionView x:Name="AlumnosCollection" SelectionMode="None" ItemsSource="{Binding ListaAlumnos}">
                     <CollectionView.ItemTemplate>
                         <DataTemplate>
-                            <Grid ColumnDefinitions="80, *, 100" BackgroundColor="#F9EBEB" HeightRequest="45">
-                                <Label Text="{Binding Usuario}" TextColor="Black" VerticalOptions="Center" HorizontalOptions="Center" FontSize="10" FontFamily="OpenSansSemiBold"/>
-                                <Label Grid.Column="1" Text="{Binding Nombre}" TextColor="Black" VerticalOptions="Center" Margin="5,0" FontSize="10" LineBreakMode="TailTruncation" FontFamily="OpenSansSemiBold"/>
+                            <Border Margin="16,4" BackgroundColor="White" Stroke="#E5EAF0" Padding="12">
+                                <Border.StrokeShape>
+                                    <RoundRectangle CornerRadius="10"></RoundRectangle>
+                                </Border.StrokeShape>
 
-                                <HorizontalStackLayout Grid.Column="2" Spacing="6" HorizontalOptions="Center" VerticalOptions="Center">
-                                    <Image Source="view_icon.png" HeightRequest="16" WidthRequest="16">
-                                        <Image.GestureRecognizers>
-                                            <TapGestureRecognizer Tapped="OnVerTapped" Command="{Binding Source={RelativeSource AncestorType={x:Type ContentPage}}, Path=BindingContext.MostrarAvisosPersonalesMaestroCommand}" CommandParameter="{Binding Id}" />
-                                        </Image.GestureRecognizers>
-                                    </Image>
+                                <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="12">
+                                    <Border WidthRequest="40" HeightRequest="40" BackgroundColor="#D1FAE5">
 
-                                    <Image Source="notify_icon.png" HeightRequest="16" WidthRequest="16">
-                                        <Image.GestureRecognizers>
-                                            <TapGestureRecognizer Tapped="OnAvisosTapped" Command="{Binding Source={RelativeSource AncestorType={x:Type ContentPage}}, Path=BindingContext.MostrarCrearAvisoPersonalCommand }" CommandParameter="{Binding Id}" />
-                                        </Image.GestureRecognizers>
-                                    </Image>
+                                        <Border.StrokeShape>
+                                            <RoundRectangle CornerRadius="20"></RoundRectangle>
+                                        </Border.StrokeShape>
 
-                                    <Image Source="edit_icon.png" HeightRequest="16" WidthRequest="16">
-                                        <Image.GestureRecognizers>
-                                            <TapGestureRecognizer Tapped="OnEditarTapped" CommandParameter="{Binding Id}" />
-                                        </Image.GestureRecognizers>
-                                    </Image>
+                                        <Label Text="A" TextColor="Black" FontAttributes="Bold" HorizontalOptions="Center" VerticalOptions="Center"></Label>
+                                    </Border>
 
-                                    <Image Source="delete_icon.png" HeightRequest="16" WidthRequest="16">
-                                        <Image.GestureRecognizers>
-                                            <TapGestureRecognizer Tapped="OnEliminarTapped" CommandParameter="{Binding Id}" />
-                                        </Image.GestureRecognizers>
-                                    </Image>
-                                </HorizontalStackLayout>
-                            </Grid>
+                                    <VerticalStackLayout Grid.Column="1" Spacing="2">
+                                        <Label Text="{Binding Nombre}" FontAttributes="Bold" FontSize="14" TextColor="#0F1A2B"></Label>
+                                        <Label Text="{Binding Usuario}" FontSize="12" TextColor="#6B7A90"></Label>
+                                    </VerticalStackLayout>
+
+                                    <HorizontalStackLayout Grid.Column="2" Spacing="15" VerticalOptions="Center">
+                                        <Image Source="ojo.png" WidthRequest="20" HeightRequest="20">
+                                            <Image.GestureRecognizers>
+                                                <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type ContentPage}}, Path=BindingContext.MostrarAvisosPersonalesMaestroCommand}" CommandParameter="{Binding Id}"></TapGestureRecognizer>
+                                            </Image.GestureRecognizers>
+                                        </Image>
+
+                                        <Image Source="addmensaje.png" WidthRequest="20" HeightRequest="20">
+                                            <Image.GestureRecognizers>
+                                                <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type ContentPage}}, Path=BindingContext.MostrarCrearAvisoPersonalCommand}" CommandParameter="{Binding Id}"/>
+                                            </Image.GestureRecognizers>
+                                        </Image>
+
+                                        <Image Source="delete_icon.png" WidthRequest="18" HeightRequest="18">
+                                            <Image.GestureRecognizers>
+                                                <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type ContentPage}}, Path=BindingContext.EliminarAlumnoCommand}" CommandParameter="{Binding .}"/>
+                                            </Image.GestureRecognizers>
+                                        </Image>
+                                    </HorizontalStackLayout>
+                                </Grid>
+                            </Border>
                         </DataTemplate>
                     </CollectionView.ItemTemplate>
                 </CollectionView>
-            </Grid>
-        </Border>
+
+            </VerticalStackLayout>
+        </Grid>
+
     </Grid>
     <!--<VerticalStackLayout>
         <Button Text="Agregar Alumno" Command="{Binding CambiarVistaCommand}" CommandParameter="AgregarAlumno" />

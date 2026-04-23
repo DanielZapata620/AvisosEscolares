@@ -101,8 +101,8 @@
                                         <DataTemplate>
                                             <ContentView>
                                                 <ContentView.GestureRecognizers>
-                                                    <TapGestureRecognizer 
-                    Command="{Binding Source={RelativeSource AncestorType={x:Type Shell}}, Path=BindingContext.VerContenidoMensajeGeneralCommand}" />
+                                                    <TapGestureRecognizer Command="{Binding BindingContext.VerAvisoGeberalAlumnoCommand, Source={RelativeSource AncestorType={x:Type CollectionView}}}"
+CommandParameter="{Binding AvisoId}"/>
                                                 </ContentView.GestureRecognizers>
 
                                                 <Border Margin="25,5,25,0" BackgroundColor="White" Padding="0">

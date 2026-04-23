@@ -18,7 +18,7 @@
                 </Border.Background>
 
                 <VerticalStackLayout>
-                    <Button Text="Atras" Command="{Binding Source={RelativeSource AncestorType={x:Type Shell}}, Path=BindingContext.IrInicioCommand}" BackgroundColor="#18376e" FontAttributes="Bold" TextColor="White" HorizontalOptions="Start"></Button>
+                    <Button Text="Atras" Command="{Binding Source={RelativeSource AncestorType={x:Type Shell}}, Path=BindingContext.VerDashboardAlumnoCommand}" CommandParameter="Personal" BackgroundColor="#18376e"  FontAttributes="Bold" TextColor="White" HorizontalOptions="Start"></Button>
                     <Label Text="{Binding AvisoPersonalSeleccionadoAlumno.Titulo}"  FontSize="20" FontAttributes="Bold" TextColor="White" HorizontalTextAlignment="Center"></Label>
                     <Label Text="{Binding AvisoPersonalSeleccionadoAlumno.Estado}" FontSize="11" TextColor="Orange" Opacity="1" FontAttributes="Bold" Grid.Column="2" HorizontalOptions="Start" VerticalOptions="Center"></Label>
                 </VerticalStackLayout>

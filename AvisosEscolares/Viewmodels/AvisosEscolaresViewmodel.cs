@@ -19,11 +19,15 @@ namespace AvisosEscolares.Viewmodels
 
         public ObservableCollection<AvisoPersonalDetallesMaestroDTO> AvisosPersonales { get; set; } = new();
         public ObservableCollection<AlumnoDetallesListaDTO> ListaAlumnos { get; set; } = new();
+
+
+        
         public ObservableCollection<AvisoPersonalListaAlumnoDTO> ListaAvisosPersonales { get; set; } = new();
-        public ObservableCollection<AvisoGeneralAlumnoDTO> ListaAvisosGenerales { get; set; } = new();
+        public ObservableCollection<AvisoGeneralListaAlumnoDTO> ListaAvisosGenerales { get; set; } = new();
         public int CantAvisosPersonalesNuevos { get; set; }
         public int CantAvisosGeneralesNuevos { get; set; }
         public AvisoPersonalListaAlumnoDTO AvisoPersonalSeleccionadoAlumno { get; set; }
+        public AvisoGeneralListaAlumnoDTO AvisoGeneralAlumnoSeleccionado { get; set; }
 
         public MaestroDTO maestro { get; set; }
 
@@ -44,9 +48,11 @@ namespace AvisosEscolares.Viewmodels
         public ICommand AgregarAlumnoCommand{ get; set; }
         public ICommand VerListaAlumnosCommand { get; set; }
         public ICommand VerAvisoPersonalAlumnoCommand { get; set; }
+        public ICommand VerAvisoGeberalAlumnoCommand { get; set; }
 
         public ICommand CrearAvisoGeneralCommand { get; set; }
         public ICommand CrearAvisoPersonalCommand { get; set; }
+        public ICommand VerDashboardAlumnoCommand { get; set; }
 
         
         public ICommand MostrarAvisosGeneralesMaestroCommand { get; set; }
@@ -54,6 +60,8 @@ namespace AvisosEscolares.Viewmodels
         public ICommand MostrarCrearAvisoPersonalCommand { get; set; }
         public ICommand MostrarAvisosPersonalesMaestroCommand { get; set; }
         public ICommand MostrarAvisosPersonalesAlumnoCommand { get; set; }
+
+
 
 
         AvisosEscolaresServices service = new();
@@ -71,8 +79,39 @@ namespace AvisosEscolares.Viewmodels
             CrearAvisoPersonalCommand = new Command(CrearAvisoPersonal);
             VerListaAlumnosCommand = new Command(VerListaAlumnos);
             AgregarAlumnoCommand = new Command(AgregarAlumno);
-            MostrarAvisosPersonalesAlumnoCommand = new Command<string>(MostrarAvisosPersonalesAlumno);
+            MostrarAvisosPersonalesAlumnoCommand = new Command<string>(MostrarAvisosAlumno);
             VerAvisoPersonalAlumnoCommand= new Command<int>(VerAvisoPersonalAlumno);
+            VerAvisoGeberalAlumnoCommand= new Command<int>(VerAvisoGeneralAlumno);
+            VerDashboardAlumnoCommand = new Command<string>(VerDashboardAlumno);
+
+        }
+
+        private async void VerAvisoGeneralAlumno(int idaviso)
+        {
+            var aviso = await service.ObtenerAvisoGeneralAlumno(idaviso);
+            if (aviso != null)
+            {
+                AvisoGeneralAlumnoSeleccionado = aviso;
+                PropertyChanged?.Invoke(this, new(nameof(AvisoGeneralAlumnoSeleccionado)));
+                await service.MarcarAvisoLeido(idaviso);
+                // Navegar a la página de detalles del aviso
+                await Shell.Current.GoToAsync("verAvisoGeneralAlumno");
+
+            }
+        }
+
+        
+
+        private void VerDashboardAlumno(string lista)
+        {
+            if (lista == "Personal")
+            {
+                ActualizarListaPersonalLocal();
+            }
+            else
+            {
+                ActualizarListaGeneralLocal();
+            }
         }
 
         private async void VerAvisoPersonalAlumno(int idaviso)
@@ -82,19 +121,70 @@ namespace AvisosEscolares.Viewmodels
             {
                 AvisoPersonalSeleccionadoAlumno = aviso;
                 PropertyChanged?.Invoke(this, new(nameof(AvisoPersonalSeleccionadoAlumno)));
+                await service.MarcarAvisoLeido(idaviso);
                 // Navegar a la página de detalles del aviso
                 await Shell.Current.GoToAsync("verAvisoPersonalAlumno");
+
             }
         }
 
-        private async void MostrarAvisosPersonalesAlumno(string lista)
+       
+      
+        private void ActualizarListaPersonalLocal()
+        {
+            foreach(var aviso in ListaAvisosPersonales)
+            {
+                if(aviso.Estado == "Nuevo")
+                {
+                    aviso.Estado = "Recibido";
+                }
+            }
+
+            var avisoSeleccionado = ListaAvisosPersonales
+            .FirstOrDefault(x => x.AvisoId == AvisoPersonalSeleccionadoAlumno.AvisoId);
+
+            if (avisoSeleccionado != null)
+            {
+                avisoSeleccionado.Estado = "Leído";
+            }
+            CantAvisosPersonalesNuevos =ListaAvisosPersonales.Where(a => a.Estado == "Nuevo").Count();
+            PropertyChanged?.Invoke(this, new(nameof(CantAvisosPersonalesNuevos)));
+            Shell.Current.GoToAsync("dashboardAlumno");
+
+        }
+
+        private void ActualizarListaGeneralLocal()
+        {
+            foreach (var aviso in ListaAvisosGenerales)
+            {
+                if (aviso.Estado == "Nuevo")
+                {
+                    aviso.Estado = "Recibido";
+                }
+            }
+
+            var avisoSeleccionado = ListaAvisosGenerales
+            .FirstOrDefault(x => x.AvisoId == AvisoGeneralAlumnoSeleccionado.AvisoId);
+
+            if (avisoSeleccionado != null)
+            {
+                avisoSeleccionado.Estado = "Leído";
+            }
+            CantAvisosGeneralesNuevos = ListaAvisosGenerales.Where(a => a.Estado == "Nuevo").Count();
+            PropertyChanged?.Invoke(this, new(nameof(CantAvisosGeneralesNuevos)));
+            Shell.Current.GoToAsync("dashboardAlumno");
+
+        }
+
+
+        private async void MostrarAvisosAlumno(string lista)
         {
             ListaAvisosGenerales.Clear();
             ListaAvisosPersonales.Clear();
             if (lista == "Generales")
             {
                
-                var avisosGenerales = await service.ObtenerAvisosGeneralesPorAlumno(alumno.Id);
+                var avisosGenerales = await service.ObtenerAvisosGeneralesPorAlumno();
                 foreach (var aviso in avisosGenerales)
                 {
                     ListaAvisosGenerales.Add(aviso);
@@ -103,7 +193,7 @@ namespace AvisosEscolares.Viewmodels
                 CantAvisosGeneralesNuevos = avisosNuevos.Count;
                 PropertyChanged?.Invoke(this, new(nameof(CantAvisosGeneralesNuevos)));
 
-                var avisosPerosnales = await service.ObtenerAvisosPersonalesAlumno(alumno.Id);
+                var avisosPerosnales = await service.ObtenerAvisosPersonalesAlumno();
                 CantAvisosPersonalesNuevos = avisosPerosnales.Where(a => a.Estado == "Nuevo").Count();
             
                 PropertyChanged?.Invoke(this, new(nameof(CantAvisosPersonalesNuevos)));
@@ -116,7 +206,7 @@ namespace AvisosEscolares.Viewmodels
             {
 
                 
-                var avisos = await service.ObtenerAvisosPersonalesAlumno(alumno.Id);
+                var avisos = await service.ObtenerAvisosPersonalesAlumno();
 
                 foreach (var aviso in avisos)
                 {
@@ -125,7 +215,7 @@ namespace AvisosEscolares.Viewmodels
                 var avisosNuevos = avisos.Where(a => a.Estado == "Nuevo").Select(a => a.AvisoId).ToList();
                 CantAvisosPersonalesNuevos = avisosNuevos.Count;
                 PropertyChanged?.Invoke(this, new(nameof(CantAvisosPersonalesNuevos)));
-                var avisosGenerales = await service.ObtenerAvisosGeneralesPorAlumno(alumno.Id);
+                var avisosGenerales = await service.ObtenerAvisosGeneralesPorAlumno();
                 CantAvisosGeneralesNuevos = avisosGenerales.Where(a => a.Estado == "Nuevo").Count();
                 
                 PropertyChanged?.Invoke(this, new(nameof(CantAvisosGeneralesNuevos)));
@@ -183,7 +273,8 @@ namespace AvisosEscolares.Viewmodels
         {
             ListaAlumnos.Clear();
             var alumnos = await service.GetAlumnosByGrupo((int)maestro.GrupoId);
-            foreach(var a in alumnos)
+            
+            foreach (var a in alumnos)
             {
               ListaAlumnos.Add(a);
             }
@@ -222,6 +313,8 @@ namespace AvisosEscolares.Viewmodels
                 
                alumno = result.Alumno;
                 await Shell.Current.GoToAsync("dashboardAlumno");
+                MostrarAvisosAlumno("Generales");
+
             }
             else if(result.Rol == "Maestro")
             {
@@ -232,9 +325,7 @@ namespace AvisosEscolares.Viewmodels
 
         }
 
-
-
-        
+       
 
 
     }

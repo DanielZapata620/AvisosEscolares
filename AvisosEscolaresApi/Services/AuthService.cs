@@ -3,21 +3,28 @@ using AvisosEscolaresApi.Models.DTOs;
 using AvisosEscolaresApi.Models.Entities;
 using AvisosEscolaresApi.Repositories;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
+using Microsoft.IdentityModel.Tokens;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
+using System.Text;
 
 namespace AvisosEscolaresApi.Services
 {
     public class AuthService
     {
-        public AuthService(Repository<Alumno> repoAlumno,Repository<Maestro> repoMaestro,IMapper mapper)
+        public AuthService(Repository<Alumno> repoAlumno,Repository<Maestro> repoMaestro,IMapper mapper,IConfiguration configuration)
         {
             RepoAlumno = repoAlumno;
             RepoMaestro = repoMaestro;
             Mapper = mapper;
+            Configuration = configuration;
         }
 
         public Repository<Alumno> RepoAlumno { get; }
         public Repository<Maestro> RepoMaestro { get; }
         public IMapper Mapper { get; }
+        public IConfiguration Configuration { get; }
 
         public LoginResponseDTO? Login(LoginDTO dto)
         {
@@ -29,10 +36,17 @@ namespace AvisosEscolaresApi.Services
 
             if (maestro != null)
             {
+                var m = Mapper.Map<MaestroDTO>(maestro);
+                var claims = new List<Claim>() {
+                    new Claim (ClaimTypes.NameIdentifier,maestro.Id.ToString()),
+                    new Claim(ClaimTypes.Role, "Maestro"),
+                    new Claim("IdGrupo", m.Id.ToString())};
+
                 return new LoginResponseDTO
                 {
+                    Token = GenerarJWT(claims),
                     Rol = "Maestro",
-                    Maestro = Mapper.Map<MaestroDTO>(maestro)
+                    Maestro = m
                 };
                 
             }
@@ -45,8 +59,16 @@ namespace AvisosEscolaresApi.Services
                         a.Contrasena == dto.Contrasena);
                 if (alumno != null)
                 {
+
+                    var claims = new List<Claim>() {
+                    new Claim (ClaimTypes.NameIdentifier,alumno.Id.ToString()),
+                    new Claim(ClaimTypes.Role, "Alumno"),
+                    new Claim("IdGrupo", alumno.GrupoId.ToString())};
+
+
                     return new LoginResponseDTO
                     {
+                        Token= GenerarJWT(claims),
                         Rol = "Alumno",
                         Alumno = Mapper.Map<AlumnoDTO>(alumno)
                     };
@@ -55,6 +77,24 @@ namespace AvisosEscolaresApi.Services
             }
            
             return null;
+        }
+
+        public string GenerarJWT(List<Claim> claims)
+        {
+            var key = Configuration.GetValue<string>("Jwt:SecretKey");
+            var tokenDescriptor = new JwtSecurityToken(
+
+                issuer: Configuration.GetValue<string>("Jwt:Issuer"),
+                audience: Configuration.GetValue<string>("Jwt:Audience"),
+                expires: DateTime.UtcNow.AddMinutes(5),
+                claims: claims,
+                signingCredentials: new SigningCredentials(
+                    new SymmetricSecurityKey(Encoding.UTF8.GetBytes(key ?? "")),
+                    SecurityAlgorithms.HmacSha256Signature
+                ));
+
+            var tokenHandler = new JwtSecurityTokenHandler();
+            return tokenHandler.WriteToken(tokenDescriptor);
         }
     }
 }

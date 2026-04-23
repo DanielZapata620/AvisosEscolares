@@ -1,11 +1,13 @@
 ﻿using AvisosEscolaresApi.Models.DTOs;
 using AvisosEscolaresApi.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace AvisosEscolaresApi.Controllers
 {
     [Route("api/[controller]")]
+    [Authorize]
     [ApiController]
     public class AlumnosController : ControllerBase
     {
@@ -15,13 +17,14 @@ namespace AvisosEscolaresApi.Controllers
         }
 
         public AlumnosServices Service { get; }
-
-        [HttpGet("grupo/{id}")]
-        public IActionResult GetAlumnosByGrupo(int id)
+        [Authorize(Roles = "Maestro")]
+        [HttpGet("grupo")]
+        public IActionResult GetAlumnosByGrupo()
         {
+            int.TryParse(User.Claims.FirstOrDefault(c => c.Type == "IdGrupo")?.Value, out var grupoId);
             try
             {
-                var alumnos = Service.ObtenerAlumnosByGrupo(id);
+                var alumnos = Service.ObtenerAlumnosByGrupo(grupoId);
                 return Ok(alumnos);
             }
             catch (Exception ex)
@@ -31,6 +34,7 @@ namespace AvisosEscolaresApi.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = "Maestro")]
         public IActionResult Post(AlumnoCreateDTO dto)
         {
             try

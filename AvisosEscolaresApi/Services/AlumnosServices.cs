@@ -7,6 +7,7 @@ using FluentValidation;
 
 namespace AvisosEscolaresApi.Services
 {
+    
     public class AlumnosServices
     {
         public AlumnosServices(Repository<Alumno> repoAlumno, Repository<Grupo> repoGrupo, AgregarAlumnoValidator agregarValidator,IMapper mapper)
@@ -25,6 +26,9 @@ namespace AvisosEscolaresApi.Services
         public List<AlumnoDetallesListaDTO> ObtenerAlumnosByGrupo(int grupoId)
         {
             var alumnos = RepoAlumno.GetAll().Where(a => a.GrupoId == grupoId);
+
+            if(alumnos.Any(a => a.GrupoId != grupoId))
+                throw new UnauthorizedAccessException();
             return alumnos.Select(a => Mapper.Map<AlumnoDetallesListaDTO>(a)).ToList();
         }
 

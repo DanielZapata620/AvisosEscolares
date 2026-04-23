@@ -45,7 +45,7 @@ namespace AvisosEscolaresApi.Mappers
             ;
 
             CreateMap<Avisoalumnoestado, AvisoPersonalListaAlumnoDTO>()
-            .ForMember(d => d.AvisoId, o => o.MapFrom(s => s.Aviso.Id))
+            .ForMember(d => d.AvisoId, o => o.MapFrom(s => s.Id))
             .ForMember(d => d.Titulo, o => o.MapFrom(s => s.Aviso.Titulo))
             .ForMember(d => d.Mensaje, o => o.MapFrom(s => s.Aviso.Mensaje))
             .ForMember(d => d.FechaLeido, o => o.MapFrom(s => s.FechaLeido))
@@ -61,7 +61,7 @@ namespace AvisosEscolaresApi.Mappers
 
 
             CreateMap<Avisoalumnoestado, AvisoPersonalAlumnoDTO>()
-            .ForMember(d => d.AvisoId, o => o.MapFrom(s => s.Aviso.Id))
+            .ForMember(d => d.AvisoId, o => o.MapFrom(s => s.Id))
             .ForMember(d => d.Titulo, o => o.MapFrom(s => s.Aviso.Titulo))
             .ForMember(d => d.Mensaje, o => o.MapFrom(s => s.Aviso.Mensaje))
             .ForMember(d => d.FechaLeido, o => o.MapFrom(s => s.FechaLeido))
@@ -76,7 +76,7 @@ namespace AvisosEscolaresApi.Mappers
             ));
 
             CreateMap<Avisoalumnoestado, AvisoGeneralListaAlumnoDTO>()
-            .ForMember(d => d.AvisoId, o => o.MapFrom(s => s.Aviso.Id))
+            .ForMember(d => d.AvisoId, o => o.MapFrom(s => s.Id))
             .ForMember(d => d.Titulo, o => o.MapFrom(s => s.Aviso.Titulo))
             .ForMember(d => d.Mensaje, o => o.MapFrom(s => s.Aviso.Mensaje))
             .ForMember(d => d.FechaLeido, o => o.MapFrom(s => s.FechaLeido))

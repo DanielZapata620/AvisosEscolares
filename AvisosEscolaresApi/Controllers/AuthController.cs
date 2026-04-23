@@ -2,6 +2,7 @@
 using AvisosEscolaresApi.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 
 namespace AvisosEscolaresApi.Controllers
 {
