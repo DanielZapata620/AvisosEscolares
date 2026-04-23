@@ -2,6 +2,8 @@
 using AvisosEscolaresApi.Models.DTOs;
 using AvisosEscolaresApi.Models.Entities;
 using AvisosEscolaresApi.Repositories;
+using AvisosEscolaresApi.Validators;
+using FluentValidation;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
@@ -13,22 +15,25 @@ namespace AvisosEscolaresApi.Services
 {
     public class AuthService
     {
-        public AuthService(Repository<Alumno> repoAlumno,Repository<Maestro> repoMaestro,IMapper mapper,IConfiguration configuration)
+        public AuthService(Repository<Alumno> repoAlumno, Repository<Maestro> repoMaestro, IMapper mapper, IConfiguration configuration)
         {
             RepoAlumno = repoAlumno;
             RepoMaestro = repoMaestro;
             Mapper = mapper;
             Configuration = configuration;
+           
         }
 
         public Repository<Alumno> RepoAlumno { get; }
         public Repository<Maestro> RepoMaestro { get; }
         public IMapper Mapper { get; }
         public IConfiguration Configuration { get; }
+        
 
         public LoginResponseDTO? Login(LoginDTO dto)
         {
             
+
             var maestro = RepoMaestro.Query().Include(g=>g.Grupo)
                 .FirstOrDefault(m =>
                     m.ClaveAcceso == dto.Usuario &&

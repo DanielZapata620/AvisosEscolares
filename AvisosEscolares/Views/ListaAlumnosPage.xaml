@@ -56,73 +56,75 @@
         </Grid>
 
         <Grid Grid.Row="2">
-            <VerticalStackLayout>
-                <Border Margin="16,10,16,0" BackgroundColor="White" Stroke="#E5EAF0" Padding="12">
-                    <Border.StrokeShape>
-                        <RoundRectangle CornerRadius="15"></RoundRectangle>
-                    </Border.StrokeShape>
+            <ScrollView>
+                <VerticalStackLayout>
+                    <Border Margin="16,10,16,0" BackgroundColor="White" Stroke="#E5EAF0" Padding="12">
+                        <Border.StrokeShape>
+                            <RoundRectangle CornerRadius="15"></RoundRectangle>
+                        </Border.StrokeShape>
 
-                    <Grid ColumnDefinitions="auto,*" ColumnSpacing="10">
-                        <Image Source="search.png" WidthRequest="20" HeightRequest="20"></Image>
-                        <Entry Grid.Column="1" Placeholder="Buscar alumno....." FontSize="14" TextColor="#0F1A2B" PlaceholderColor="#A0AFBF" BackgroundColor="Transparent"></Entry>
-                    </Grid>
-                </Border>
+                        <Grid ColumnDefinitions="auto,*" ColumnSpacing="10">
+                            <Image Source="search.png" WidthRequest="20" HeightRequest="20"></Image>
+                            <Entry Grid.Column="1" Placeholder="Buscar alumno....." FontSize="14" TextColor="#0F1A2B" PlaceholderColor="#A0AFBF" BackgroundColor="Transparent"></Entry>
+                        </Grid>
+                    </Border>
+                    <CollectionView x:Name="AlumnosCollection" SelectionMode="None" ItemsSource="{Binding ListaAlumnos}" Margin="0,10,0,0">
+                        <CollectionView.ItemTemplate>
+                            <DataTemplate>
+                                <Border Margin="16,4" BackgroundColor="White" Stroke="#E5EAF0" Padding="12">
+                                    <Border.StrokeShape>
+                                        <RoundRectangle CornerRadius="10"></RoundRectangle>
+                                    </Border.StrokeShape>
+                                    <Border.GestureRecognizers>
+                                        <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type ContentPage}}, Path=BindingContext.MostrarAvisosPersonalesMaestroCommand}" CommandParameter="{Binding Id}"></TapGestureRecognizer>
+                                    </Border.GestureRecognizers>
 
-                <CollectionView x:Name="AlumnosCollection" SelectionMode="None" ItemsSource="{Binding ListaAlumnos}" Margin="0,10,0,0">
-                    <CollectionView.ItemTemplate>
-                        <DataTemplate>
-                            <Border Margin="16,4" BackgroundColor="White" Stroke="#E5EAF0" Padding="12">
-                                <Border.StrokeShape>
-                                    <RoundRectangle CornerRadius="10"></RoundRectangle>
-                                </Border.StrokeShape>
-                                <Border.GestureRecognizers>
-                                    <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type ContentPage}}, Path=BindingContext.MostrarAvisosPersonalesMaestroCommand}" CommandParameter="{Binding Id}"></TapGestureRecognizer>
-                                </Border.GestureRecognizers>
+                                    <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="12">
+                                        <Border WidthRequest="40" HeightRequest="40" BackgroundColor="#D1FAE5">
 
-                                <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="12">
-                                    <Border WidthRequest="40" HeightRequest="40" BackgroundColor="#D1FAE5">
+                                            <Border.StrokeShape>
+                                                <RoundRectangle CornerRadius="20"></RoundRectangle>
+                                            </Border.StrokeShape>
 
-                                        <Border.StrokeShape>
-                                            <RoundRectangle CornerRadius="20"></RoundRectangle>
-                                        </Border.StrokeShape>
+                                            <Label Text="A" TextColor="Black" FontAttributes="Bold" HorizontalOptions="Center" VerticalOptions="Center"></Label>
+                                        </Border>
 
-                                        <Label Text="A" TextColor="Black" FontAttributes="Bold" HorizontalOptions="Center" VerticalOptions="Center"></Label>
-                                    </Border>
+                                        <VerticalStackLayout Grid.Column="1" Spacing="2">
+                                            <Label Text="{Binding Nombre}" FontAttributes="Bold" FontSize="14" TextColor="#0F1A2B"></Label>
+                                            <Label Text="{Binding Usuario}" FontSize="12" TextColor="#6B7A90"></Label>
+                                        </VerticalStackLayout>
 
-                                    <VerticalStackLayout Grid.Column="1" Spacing="2">
-                                        <Label Text="{Binding Nombre}" FontAttributes="Bold" FontSize="14" TextColor="#0F1A2B"></Label>
-                                        <Label Text="{Binding Usuario}" FontSize="12" TextColor="#6B7A90"></Label>
-                                    </VerticalStackLayout>
+                                        <HorizontalStackLayout Grid.Column="2" Spacing="15" VerticalOptions="Center">
+                                            <Image Source="ojo.png" WidthRequest="20" HeightRequest="20">
+                                                <Image.GestureRecognizers>
+                                                    <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type ContentPage}}, Path=BindingContext.MostrarAvisosPersonalesMaestroCommand}" CommandParameter="{Binding Id}"></TapGestureRecognizer>
+                                                </Image.GestureRecognizers>
+                                            </Image>
 
-                                    <HorizontalStackLayout Grid.Column="2" Spacing="15" VerticalOptions="Center">
-                                        <Image Source="ojo.png" WidthRequest="20" HeightRequest="20">
-                                            <Image.GestureRecognizers>
-                                                <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type ContentPage}}, Path=BindingContext.MostrarAvisosPersonalesMaestroCommand}" CommandParameter="{Binding Id}"></TapGestureRecognizer>
-                                            </Image.GestureRecognizers>
-                                        </Image>
+                                            <Image Source="addmensaje.png" WidthRequest="20" HeightRequest="20">
+                                                <Image.GestureRecognizers>
+                                                    <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type ContentPage}}, Path=BindingContext.MostrarCrearAvisoPersonalCommand}" CommandParameter="{Binding Id}"/>
+                                                </Image.GestureRecognizers>
+                                            </Image>
 
-                                        <Image Source="addmensaje.png" WidthRequest="20" HeightRequest="20">
-                                            <Image.GestureRecognizers>
-                                                <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type ContentPage}}, Path=BindingContext.MostrarCrearAvisoPersonalCommand}" CommandParameter="{Binding Id}"/>
-                                            </Image.GestureRecognizers>
-                                        </Image>
-
-                                        <Image Source="delete_icon.png" WidthRequest="18" HeightRequest="18">
-                                            <Image.GestureRecognizers>
-                                                <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type ContentPage}}, Path=BindingContext.EliminarAlumnoCommand}" CommandParameter="{Binding .}"/>
-                                            </Image.GestureRecognizers>
-                                        </Image>
-                                    </HorizontalStackLayout>
-                                </Grid>
-                            </Border>
-                        </DataTemplate>
-                    </CollectionView.ItemTemplate>
-                </CollectionView>
-
-            </VerticalStackLayout>
+                                            <Image Source="delete_icon.png" WidthRequest="18" HeightRequest="18">
+                                                <Image.GestureRecognizers>
+                                                    <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type ContentPage}}, Path=BindingContext.EliminarAlumnoCommand}" CommandParameter="{Binding .}"/>
+                                                </Image.GestureRecognizers>
+                                            </Image>
+                                        </HorizontalStackLayout>
+                                    </Grid>
+                                </Border>
+                            </DataTemplate>
+                        </CollectionView.ItemTemplate>
+                    </CollectionView>
+                </VerticalStackLayout>
+            </ScrollView>
         </Grid>
 
     </Grid>
+
+
     <!--<VerticalStackLayout>
         <Button Text="Agregar Alumno" Command="{Binding CambiarVistaCommand}" CommandParameter="AgregarAlumno" />
         <CollectionView ItemsSource="{Binding ListaAlumnos}" SelectedItem="{Binding AlumnoSeleccionado}" SelectionMode="Single">

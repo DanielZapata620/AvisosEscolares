@@ -23,7 +23,7 @@
                     <Label Text="{Binding Grupo}" FontSize="12" TextColor="#70FFFFFF"></Label>
                 </HorizontalStackLayout>
             </VerticalStackLayout>
-
+            <Button Text="⟵" FontAttributes="Bold" FontSize="12" TextColor="White" BackgroundColor="#50000000" Grid.Column="2" Command="{Binding CambiarVistaCommand}" CommandParameter="listaAlumnos"></Button>
         </Grid>
 
         <CollectionView Grid.Row="2" ItemsSource="{Binding AvisosPersonales}" SelectionMode="None" Margin="10">
@@ -45,24 +45,20 @@
                         <Grid ColumnDefinitions="6,*,Auto" Padding="12" ColumnSpacing="10">
                             <BoxView Grid.Column="0" WidthRequest="6" CornerRadius="3" Color="Orange"></BoxView>
 
-                            <VerticalStackLayout Grid.Column="1" Spacing="6">
+                            <VerticalStackLayout Grid.Column="1" Margin="0,-10,-15,0">
                                 <Grid ColumnDefinitions="*,Auto">
-
                                     <Label Text="{Binding Titulo}" FontAttributes="Bold" FontSize="14" TextColor="Black" LineBreakMode="WordWrap"></Label>
-
-                                    <Label Grid.Column="1" Text="{Binding Estado}" FontSize="11" TextColor="Orange" FontAttributes="Bold" VerticalOptions="Center"></Label>
+                                    <Label Grid.Column="1" Text="x" TextColor="Red" FontSize="20" FontAttributes="Bold" BackgroundColor="Transparent" Margin="0,-5,10,0">
+                                        <Label.GestureRecognizers>
+                                            <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type ContentPage}}, Path=BindingContext.EliminarAvisoCommand}" 
+                                                CommandParameter="{Binding .}" />
+                                        </Label.GestureRecognizers>
+                                    </Label>
                                 </Grid>
 
-                                <Label Text="{Binding Mensaje}"
-                                 FontSize="13" TextColor="Gray" LineBreakMode="WordWrap" MaxLines="2"></Label>
-
-
-                                <Button Grid.Column="1" Margin="10" Text="ELIMINAR" TextColor="Black"  FontSize="12" FontAttributes="Bold" HorizontalOptions="Center" VerticalOptions="Center" BackgroundColor="#fa4141" Opacity="0.8">
-                                    <Button.GestureRecognizers>
-                                        <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type ContentPage}}, Path=BindingContext.EliminarAvisoCommand}" 
-                                                      CommandParameter="{Binding .}" />
-                                    </Button.GestureRecognizers>
-                                </Button>
+                                <Label Text="{Binding Mensaje}" FontSize="13" TextColor="Gray" LineBreakMode="WordWrap" MaxLines="2"></Label>
+                                <Label Grid.Column="1" Text="{Binding Estado}" FontSize="11" TextColor="Orange" FontAttributes="Bold" HorizontalOptions="End"></Label>
+                                <Label Text="Publicado: 12/07/2026" FontSize="11" TextColor="LightGray" HorizontalOptions="End"></Label>
                             </VerticalStackLayout>
                         </Grid>
                     </Border>

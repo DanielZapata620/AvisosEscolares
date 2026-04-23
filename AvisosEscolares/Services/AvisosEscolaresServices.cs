@@ -50,8 +50,9 @@ namespace AvisosEscolares.Services
                 return (loginResponse, null);
             }
 
-            
             var error = await response.Content.ReadAsStringAsync();
+           
+            
             return (null, error);
         }
 

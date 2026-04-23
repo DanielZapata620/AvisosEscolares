@@ -38,6 +38,7 @@ namespace AvisosEscolares.Viewmodels
         public CrearAvisoPersonalDto NuevoAvisoPersonal { get; set; } =new CrearAvisoPersonalDto();
 
         public int AlumnoSeleccionado { get; set; } = new();
+        public bool isLoading { get; set; }
 
         public AlumnoCreateDTO NuevoAlumno { get; set; } = new AlumnoCreateDTO();
 
@@ -309,6 +310,8 @@ namespace AvisosEscolares.Viewmodels
 
         public async void Login()
         {
+            isLoading = true;
+            PropertyChanged?.Invoke(this, new(nameof(isLoading)));
             var result = await service.Login(LoginDTO);
             if (result.data != null)
             {
@@ -333,6 +336,9 @@ namespace AvisosEscolares.Viewmodels
                 PropertyChanged?.Invoke(this, new(nameof(Error)));
 
             }
+
+            isLoading = false;
+            PropertyChanged?.Invoke(this, new(nameof(isLoading)));
 
         }
 
