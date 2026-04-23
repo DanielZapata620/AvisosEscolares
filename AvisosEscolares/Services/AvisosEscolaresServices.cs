@@ -38,17 +38,23 @@ namespace AvisosEscolares.Services
             }
             return new List<AlumnoDetallesListaDTO>();
         }
-        public async Task<LoginResponseDTO?> Login(LoginDTO loginDto)
+
+        public async Task<(LoginResponseDTO? data, string? error)> Login(LoginDTO loginDto)
         {
             var response = await client.PostAsJsonAsync("api/auth/", loginDto);
+
             if (response.IsSuccessStatusCode)
             {
                 var loginResponse = await response.Content.ReadFromJsonAsync<LoginResponseDTO>();
                 SetToken(loginResponse.Token);
-                return loginResponse;
+                return (loginResponse, null);
             }
-            return null;
+
+            
+            var error = await response.Content.ReadAsStringAsync();
+            return (null, error);
         }
+
 
         public async Task<List<AvisoGeneralDetallesMaestroDTO>> ObtenerAvisosGeneralesVigentes()
         {
@@ -117,7 +123,7 @@ namespace AvisosEscolares.Services
         }
         public async Task<List<AvisoPersonalDetallesMaestroDTO>> ObtenerAvisosPersonalesPorAlumno(int alumnoId)
         {
-            var response = await client.GetAsync($"api/avisos/personales/alumno/{alumnoId}");
+            var response = await client.GetAsync($"api/avisos/personales/{alumnoId}");
             if (response.IsSuccessStatusCode)
             {
                 return await response.Content.ReadFromJsonAsync<List<AvisoPersonalDetallesMaestroDTO>>();

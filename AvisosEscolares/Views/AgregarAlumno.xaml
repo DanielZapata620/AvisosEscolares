@@ -3,9 +3,10 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="AvisosEscolares.Views.AgregarAlumno"
              Title="AgregarAlumno" BackgroundColor="White" Shell.NavBarIsVisible="False">
+
     <Grid RowDefinitions="Auto,*" BackgroundColor="#F4F7FB">
         <Grid ColumnDefinitions="Auto,*,Auto" BackgroundColor="#0F2D5E" Padding="20">
-            <Label Grid.Column="1" Text="Agregar Alumno" TextColor="White" FontAttributes="Bold" FontSize="20" HorizontalOptions="Center" VerticalOptions="Center"></Label>
+            <Label Grid.Column="1" Text="Agregar alumno" TextColor="White" FontAttributes="Bold" FontSize="20" HorizontalOptions="Center" VerticalOptions="Center"></Label>
         </Grid>
 
         <ScrollView Grid.Row="1">
@@ -16,31 +17,46 @@
                     </Border.StrokeShape>
 
                     <VerticalStackLayout Spacing="10">
-                        <Label Text="Nombre completo" FontSize="12" TextColor="#6B7A90" FontAttributes="Bold"></Label>
-                        <Entry Placeholder="Ej. Juan Pérez López" Text="{Binding NuevoAlumno.Nombre}" BackgroundColor="#F4F7FB" TextColor="#0F1A2B" PlaceholderColor="#A0AFBF"
+                        <Label Text="Nombre completo:" TextColor="#6B7A90" FontAttributes="Bold" Margin="5,0,0,0"></Label>
+                        <Border>
+                            <Border.StrokeShape>
+                                <RoundRectangle CornerRadius="15"></RoundRectangle>
+                            </Border.StrokeShape>
+
+                            <Entry Placeholder="Ej. Juan Pérez López" Text="{Binding NuevoAlumno.Nombre}" BackgroundColor="#F4F7FB" TextColor="#0F1A2B" PlaceholderColor="#A0AFBF"
                                HeightRequest="45"></Entry>
+                        </Border>
 
-                        <Label Text="Matrícula"  TextColor="#6B7A90" FontAttributes="Bold"></Label>
+                        <Label Text="Matrícula:"  TextColor="#6B7A90" FontAttributes="Bold" Margin="5,0,0,0"></Label>
 
-                        <Entry Placeholder="Ej. 2024-1234" Text="{Binding NuevoAlumno.Usuario}" BackgroundColor="#F4F7FB"
+                        <Border>
+                            <Border.StrokeShape>
+                                <RoundRectangle CornerRadius="15"></RoundRectangle>
+                            </Border.StrokeShape>
+                            <Entry Placeholder="Ej. 2024-1234" Text="{Binding NuevoAlumno.Usuario}" BackgroundColor="#F4F7FB"
                                TextColor="#0F1A2B" PlaceholderColor="#A0AFBF"></Entry>
 
+                        </Border>
 
-                        <Label Text="Contraseña"  TextColor="#6B7A90" FontAttributes="Bold"></Label>
-
-                        <Entry Placeholder="ESCOLARES" PlaceholderColor="Black" IsReadOnly="True" Text="{Binding NuevoAlumno.Contraseña}"
+                        <Label Text="Contraseña:"  TextColor="#6B7A90" FontAttributes="Bold" Margin="5,0,0,0"></Label>
+                        <Border>
+                            <Border.StrokeShape>
+                                <RoundRectangle CornerRadius="15"></RoundRectangle>
+                            </Border.StrokeShape>
+                            <Entry Placeholder="ESCOLARES" PlaceholderColor="Black" IsReadOnly="True" Text="{Binding NuevoAlumno.Contraseña}"
                                BackgroundColor="#F4F7FB" TextColor="#0F1A2B"></Entry>
+                        </Border>
                     </VerticalStackLayout>
                 </Border>
 
                 <VerticalStackLayout Spacing="15" Margin="0,40,0,0">
                     <Button Text="Agregar Alumno" Command="{Binding AgregarAlumnoCommand}"
                         BackgroundColor="#0F2D5E" TextColor="White" FontAttributes="Bold"
-                        CornerRadius="15"></Button>
+                        CornerRadius="15" HeightRequest="60"></Button>
 
                     <Button Text="Cancelar" Command="{Binding CambiarVistaCommand}" CommandParameter="listaAlumnos" BackgroundColor="LightGray"
                         TextColor="#0F1A2B" BorderColor="#E5EAF0"
-                        BorderWidth="1" CornerRadius="15"></Button>
+                        BorderWidth="1" CornerRadius="15" HeightRequest="60"></Button>
 
                 </VerticalStackLayout>
 

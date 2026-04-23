@@ -15,6 +15,8 @@ namespace AvisosEscolares.Viewmodels
 
         public LoginDTO LoginDTO { get; set; } = new LoginDTO();
 
+        public string Error { get; set; } 
+
         public ObservableCollection<AvisoGeneralDetallesMaestroDTO> AvisosGenerales { get; set; } = new();
 
         public ObservableCollection<AvisoPersonalDetallesMaestroDTO> AvisosPersonales { get; set; } = new();
@@ -308,19 +310,28 @@ namespace AvisosEscolares.Viewmodels
         public async void Login()
         {
             var result = await service.Login(LoginDTO);
-            if(result.Rol== "Alumno")
+            if (result.data != null)
             {
-                
-               alumno = result.Alumno;
-                await Shell.Current.GoToAsync("dashboardAlumno");
-                MostrarAvisosAlumno("Generales");
+                if (result.data.Alumno != null)
+                {
 
+                    alumno = result.data.Alumno;
+                    await Shell.Current.GoToAsync("dashboardAlumno");
+                    MostrarAvisosAlumno("Generales");
+
+                }
+                else if (result.data.Maestro != null)
+                {
+                    // Navegar a la vista del maestro
+                    maestro = result.data.Maestro;
+                    await Shell.Current.GoToAsync("dashboardMaestro");
+                }
             }
-            else if(result.Rol == "Maestro")
+            else if(result.error != null)
             {
-                // Navegar a la vista del maestro
-               maestro = result.Maestro;
-               await Shell.Current.GoToAsync("dashboardMaestro");
+                Error = result.error;
+                PropertyChanged?.Invoke(this, new(nameof(Error)));
+
             }
 
         }

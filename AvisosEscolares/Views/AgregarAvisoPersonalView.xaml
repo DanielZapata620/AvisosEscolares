@@ -2,87 +2,55 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="AvisosEscolares.Views.AgregarAvisoPersonalView"
-             Title="AgregarAvisoPersonalView">
+             Title="AgregarAvisoPersonalView" Shell.NavBarIsVisible="False">
 
-    <Grid RowDefinitions="Auto, *, Auto">
-
-        <BoxView Grid.Row="0" Color="#2D214F" HeightRequest="60" />
-        <Label Grid.Row="0" 
-               Text="AGREGAR AVISO GENERAL" 
-               TextColor="White" 
-               FontSize="15" 
-               FontAttributes="Bold"
-               FontFamily="OpenSansSemiBold"
-               HorizontalOptions="Center" 
-               VerticalOptions="Center" />
+    <Grid RowDefinitions="Auto,*" BackgroundColor="#F4F7FB">
+        <Grid ColumnDefinitions="Auto,*,Auto" BackgroundColor="#0F2D5E" Padding="20">
+            <Label Grid.Column="1" Text="Agrega aviso personal" TextColor="White" FontAttributes="Bold" FontSize="20" HorizontalOptions="Center" VerticalOptions="Center"></Label>
+        </Grid>
 
         <ScrollView Grid.Row="1">
-            <VerticalStackLayout Padding="25,30" Spacing="18">
+            <VerticalStackLayout Padding="10" Spacing="20">
+                <Border BackgroundColor="White" Stroke="#E5EAF0" Padding="10">
+                    <Border.StrokeShape>
+                        <RoundRectangle CornerRadius="15"></RoundRectangle>
+                    </Border.StrokeShape>
 
-                <Label Text="INFORMACION DEL AVISO" 
-                       TextColor="Black" 
-                       FontSize="17" 
-                       FontAttributes="Bold" 
-                       FontFamily="OpenSansSemiBold"
-                       Margin="0,0,0,5"/>
+                    <VerticalStackLayout Spacing="10">
+                        <Label Text="Titulo del aviso:" TextColor="#6B7A90" FontAttributes="Bold" Margin="10,0,0,0"></Label>
+                        <Border>
+                            <Border.StrokeShape>
+                                <RoundRectangle CornerRadius="10"></RoundRectangle>
+                            </Border.StrokeShape>
+                            <Entry Text="{Binding NuevoAvisoPersonal.Titulo}" FontSize="13" BackgroundColor="#F4F7FB" TextColor="Black"
+                               HeightRequest="45"></Entry>
+                        </Border>
 
-                <VerticalStackLayout Spacing="5">
-                    <Label Text="TITULO" TextColor="#333333" FontSize="12" FontAttributes="Bold" FontFamily="OpenSansSemiBold"/>
-                    <Border Stroke="#000000" StrokeThickness="1" BackgroundColor="#F5E8E8" HeightRequest="40">
-                        <Border.StrokeShape>
-                            <RoundRectangle CornerRadius="8" />
-                        </Border.StrokeShape>
-                        <Entry Text="{Binding  NuevoAvisoPersonal.Titulo}" 
-                               TextColor="Black" 
-                               Margin="10,0"
-                               VerticalOptions="Center"
-                               FontSize="14"
-                               FontFamily="OpenSansSemiBold"/>
-                    </Border>
+                        <Label Text="Contenido del aviso:"  TextColor="#6B7A90" FontAttributes="Bold" Margin="10,0,0,0"></Label>
+
+                        <Border StrokeThickness="1" BackgroundColor="#F4F7FB" HeightRequest="180">
+                            <Border.StrokeShape>
+                                <RoundRectangle CornerRadius="15"></RoundRectangle>
+                            </Border.StrokeShape>
+                            <Editor TextColor="Black" FontSize="13" Text="{Binding NuevoAvisoPersonal.Mensaje}"></Editor>
+                        </Border>
+
+                    </VerticalStackLayout>
+                </Border>
+
+                <VerticalStackLayout Spacing="20" Margin="0,20,0,0">
+                    <Button Text="Agregar aviso" Command="{Binding CrearAvisoPersonalCommand}"
+                        BackgroundColor="#0F2D5E" TextColor="White" FontAttributes="Bold"
+                        CornerRadius="15" HeightRequest="56"></Button>
+
+                    <Button Text="Cancelar" Command="{Binding CambiarVistaCommand}" CommandParameter="listaAlumnos" BackgroundColor="LightGray"
+                        TextColor="#0F1A2B" BorderColor="#E5EAF0"
+                        BorderWidth="1" CornerRadius="15" HeightRequest="60"></Button>
+
                 </VerticalStackLayout>
-
-                <VerticalStackLayout Spacing="5">
-                    <Label Text="MENSAJE" TextColor="#333333" FontSize="12" FontAttributes="Bold" FontFamily="OpenSansSemiBold"/>
-                    <Border Stroke="#000000" StrokeThickness="1" BackgroundColor="#F5E8E8" HeightRequest="150">
-                        <Border.StrokeShape>
-                            <RoundRectangle CornerRadius="8" />
-                        </Border.StrokeShape>
-                        <Editor Text="{Binding NuevoAvisoPersonal.Mensaje}" 
-                                TextColor="Black" 
-                                Margin="10,5"
-                                AutoSize="Disabled"
-                                FontSize="14"
-                                FontFamily="OpenSansSemiBold"/>
-                    </Border>
-                </VerticalStackLayout>
-
-                
 
             </VerticalStackLayout>
         </ScrollView>
-
-        <VerticalStackLayout Grid.Row="2" Padding="25,0,25,20" Spacing="10">
-            <Button Text="GUARDAR" 
-                    Command="{Binding CrearAvisoPersonalCommand}"
-                    BackgroundColor="#513B94" 
-                    TextColor="White" 
-                    FontAttributes="Bold"
-                    FontFamily="OpenSansSemiBold"
-                    CornerRadius="8" 
-                    HeightRequest="42"
-                    FontSize="12"/>
-
-            <Button Text="CANCELAR" 
-                    Command="{Binding CambiarVistaCommand}"
-                    CommandParameter="ListaAvisos"
-                    BackgroundColor="#513B94" 
-                    TextColor="White" 
-                    FontAttributes="Bold"
-                    FontFamily="OpenSansSemiBold"
-                    CornerRadius="8" 
-                    HeightRequest="42"
-                    FontSize="12"/>
-        </VerticalStackLayout>
 
     </Grid>
 </ContentPage>

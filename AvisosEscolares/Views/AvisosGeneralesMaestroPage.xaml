@@ -2,127 +2,98 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="AvisosEscolares.Views.AvisosGeneralesMaestroPage"
-             BackgroundColor="White">
+             BackgroundColor="White" Shell.NavBarIsVisible="False">
 
-    <Grid RowDefinitions="Auto, Auto, *">
+    <Grid RowDefinitions="Auto,Auto,*" BackgroundColor="#F4F7FB">
+        <Grid ColumnDefinitions="auto,*,auto" ColumnSpacing="12" Background="#0F2D5E" Padding="10,25,10,10">
+            <Border WidthRequest="50" HeightRequest="50" BackgroundColor="#0EA5A0" Stroke="#0C7A76">
+                <Border.StrokeShape>
+                    <RoundRectangle CornerRadius="25"></RoundRectangle>
+                </Border.StrokeShape>
+                <Label Text="A" TextColor="White" HorizontalOptions="Center" VerticalOptions="Center" FontSize="20" FontAttributes="Bold"></Label>
+            </Border>
 
-        <BoxView Grid.Row="0" Color="#2D214F" HeightRequest="60" />
-        <Label Grid.Row="0" 
-               Text="GESTIÓN DE AVISOS GENERALES" 
-               TextColor="White" 
-               FontSize="15" 
-               FontAttributes="Bold"
-               FontFamily="OpenSansSemiBold"
-               HorizontalOptions="Center" 
-               VerticalOptions="Center" />
+            <VerticalStackLayout Grid.Column="1">
+                <Label Text="Docente" FontSize="12" TextColor="#80FFFFFF"></Label>
+                <Label Text="{Binding maestro.Nombre}" FontSize="15" FontAttributes="Bold" TextColor="White"></Label>
+                <Label Text="Bachillerato General" FontSize="12" TextColor="#70FFFFFF"></Label>
+            </VerticalStackLayout>
 
-        <Grid Grid.Row="1" 
-              Margin="20,15" 
-              ColumnDefinitions="60, *" 
-              ColumnSpacing="10">
+            <Border Grid.Column="2" WidthRequest="36" HeightRequest="36" BackgroundColor="#20FFFFFF">
+                <Border.StrokeShape>
+                    <RoundRectangle CornerRadius="18"></RoundRectangle>
+                </Border.StrokeShape>
 
-            <Button Grid.Column="0"
-                    ImageSource="back_arrow.png"
-                    BackgroundColor="#513B94" 
-                    CornerRadius="10"
-                    HeightRequest="45"
-                    Padding="0" />
+                <Border.GestureRecognizers>
+                    <TapGestureRecognizer Command="{Binding LogoutCommand}"></TapGestureRecognizer>
+                </Border.GestureRecognizers>
 
-            <Button Grid.Column="1"
-                    Text="+  AGREGAR AVISO" 
-                    TextColor="White" 
-                    FontSize="12"
-                    FontAttributes="Bold"
-                    FontFamily="OpenSansSemiBold"
-                    BackgroundColor="#513B94" 
-                    CornerRadius="10"
-                    HeightRequest="45"
-                    Command="{Binding CambiarVistaCommand}" 
-                    CommandParameter="crearAvisoGeneral" />
+                <Image Source="logout.png" WidthRequest="20" HeightRequest="20" HorizontalOptions="Center" VerticalOptions="Center"></Image>
+            </Border>
+
         </Grid>
 
-        <CollectionView Grid.Row="2" 
-                        ItemsSource="{Binding AvisosGenerales}" 
-                        SelectionMode="None" Margin="20">
-
-            <CollectionView.ItemsLayout>
-                <LinearItemsLayout Orientation="Vertical" ItemSpacing="20" />
-            </CollectionView.ItemsLayout>
-
-            <CollectionView.ItemTemplate >
-                <DataTemplate >
-                    <Border Margin="20,20" 
-                            Stroke="#333333" 
-                            StrokeThickness="1" 
-                            BackgroundColor="#F9EBEB">
+        <Grid Grid.Row="1">
+            <ScrollView>
+                <VerticalStackLayout>
+                    <Border Margin="5" BackgroundColor="White" Stroke="#E5EAF0">
                         <Border.StrokeShape>
-                            <RoundRectangle CornerRadius="10" />
+                            <RoundRectangle CornerRadius="16"></RoundRectangle>
                         </Border.StrokeShape>
 
-                        <Grid RowDefinitions="Auto, *, Auto">
-
-                            <BoxView Grid.Row="0" Color="#2D214F" HeightRequest="40" />
-                            <Label Grid.Row="0" 
-                                   Text="{Binding Titulo}" 
-                                   TextColor="White" 
-                                   FontSize="14" 
-                                   FontAttributes="Bold"
-                                   FontFamily="OpenSansSemiBold"
-                                   VerticalOptions="Center" 
-                                   Margin="15,0" />
-
-                            <VerticalStackLayout Grid.Row="1" Padding="15" Spacing="12">
-                                <Label Text="{Binding Mensaje}" 
-                                       TextColor="Black" 
-                                       FontSize="12" 
-                                       FontFamily="OpenSansSemiBold"
-                                       LineBreakMode="WordWrap" />
-
-                                <Grid ColumnDefinitions="*, Auto">
-                                    <Label Grid.Column="0" 
-                                           Text="{Binding FechaCaducidad, StringFormat='AVISO VIGENTE HASTA EL {0:dd-MM-yyyy}'}" 
-                                           FontSize="9" 
-                                           TextColor="Black" 
-                                           FontFamily="OpenSansSemiBold"
-                                           VerticalOptions="Center"/>
-
-                                    <HorizontalStackLayout Grid.Column="1" Spacing="5" VerticalOptions="Center">
-                                        <Image Source="view_icon.png" HeightRequest="13" />
-                                        <Label Text="{Binding CantLeidos}" 
-                                               FontSize="10" 
-                                               TextColor="Black" 
-                                               FontFamily="OpenSansSemiBold"/>
-                                    </HorizontalStackLayout>
-                                </Grid>
-                            </VerticalStackLayout>
-
-                            <Grid Grid.Row="2" HeightRequest="40" ColumnDefinitions="*, *">
-                                <BoxView Grid.ColumnSpan="2" Color="#2D214F" />
-                                <BoxView Grid.Column="0" HorizontalOptions="End" WidthRequest="1" BackgroundColor="Black" Margin="0,8" />
-
-                                <Label Grid.Column="0" Text="EDITAR" TextColor="White" 
-                                       FontSize="11" FontAttributes="Bold" FontFamily="OpenSansSemiBold"
-                                       HorizontalOptions="Center" VerticalOptions="Center">
-                                    <Label.GestureRecognizers>
-                                        <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type ContentPage}}, Path=BindingContext.EditarAvisoCommand}" 
-                                                              CommandParameter="{Binding .}" />
-                                    </Label.GestureRecognizers>
-                                </Label>
-
-                                <Label Grid.Column="1" Text="ELIMINAR" TextColor="White" 
-                                       FontSize="11" FontAttributes="Bold" FontFamily="OpenSansSemiBold"
-                                       HorizontalOptions="Center" VerticalOptions="Center">
-                                    <Label.GestureRecognizers>
-                                        <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type ContentPage}}, Path=BindingContext.EliminarAvisoCommand}" 
-                                                              CommandParameter="{Binding .}" />
-                                    </Label.GestureRecognizers>
-                                </Label>
+                        <VerticalStackLayout>
+                            <Grid ColumnDefinitions="auto,*,auto" BackgroundColor="#0F2D5E" Padding="15">
+                                <Button Text="⟵" TextColor="White" BackgroundColor="#50000000" Command="{Binding CambiarVistaCommand}" CommandParameter="dashboardMaestro"></Button>
+                                <Label Grid.Column="1" Text="GESTIÓN DE AVISOS GENERALES" FontAttributes="Bold" HorizontalTextAlignment="Center" VerticalTextAlignment="Center"></Label>
+                                <Button Grid.Column="2" Text="➕" TextColor="White" BackgroundColor="#50000000" Command="{Binding CambiarVistaCommand}" 
+                                CommandParameter="crearAvisoGeneral"></Button>
                             </Grid>
-                        </Grid>
+                        </VerticalStackLayout>
                     </Border>
-                </DataTemplate>
-            </CollectionView.ItemTemplate>
-        </CollectionView>
+                </VerticalStackLayout>
+            </ScrollView>
+        </Grid>
+
+        <Grid Grid.Row="2">
+            <CollectionView  ItemsSource="{Binding AvisosGenerales}" SelectionMode="None">
+                <CollectionView.ItemsLayout>
+                    <LinearItemsLayout Orientation="Vertical" ItemSpacing="10" />
+                </CollectionView.ItemsLayout>
+                <CollectionView.ItemTemplate>
+                    <DataTemplate>
+                        <Border BackgroundColor="White" >
+                            <Border.StrokeShape>
+                                <RoundRectangle CornerRadius="20"></RoundRectangle>
+                            </Border.StrokeShape>
+
+                            <VerticalStackLayout>
+                                <Grid BackgroundColor="#0F2D5E" Padding="12" ColumnDefinitions="*,auto,auto">
+                                    <Label Text="Comunicado general" FontAttributes="Bold" FontSize="14" TextColor="#80FFFFFF"></Label>
+
+                                    <Border Grid.Column="1" BackgroundColor="#69c9c5" Padding="10,2" Stroke="Transparent"
+                                        VerticalOptions="Start" Margin="0,0,10,0">
+                                        <Border.StrokeShape>
+                                            <RoundRectangle CornerRadius="10"></RoundRectangle>
+                                        </Border.StrokeShape>
+                                        <Label Text="{Binding FechaCaducidad, StringFormat='Vigencia: {0:dd-MM-yyyy}'}" FontSize="10" TextColor="White" FontAttributes="Bold"></Label>
+                                    </Border>
+                                    <HorizontalStackLayout Grid.Column="2">
+                                        <Image Source="view_icon.png" HeightRequest="15" HorizontalOptions="Center" VerticalOptions="Center" Margin="0,0,5,0"></Image>
+                                        <Label Text="{Binding CantLeidos}" FontSize="10" TextColor="Black" VerticalOptions="Center"></Label>
+                                    </HorizontalStackLayout>
+
+                                </Grid>
+                                <VerticalStackLayout Padding="12" Spacing="8">
+                                    <Label Text="{Binding Titulo}" FontAttributes="Bold" TextColor="Black" FontSize="15"></Label>
+                                    <Label Text="{Binding Mensaje}" FontSize="13" TextColor="Gray" MaxLines="2"></Label>
+                                    <Label Text="Publicado: 12/07/2026" FontSize="11" TextColor="LightGray" HorizontalOptions="End"></Label>
+                                </VerticalStackLayout>
+                            </VerticalStackLayout>
+                        </Border>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+        </Grid>
     </Grid>
 </ContentPage>
 <!--<?xml version="1.0" encoding="utf-8" ?>

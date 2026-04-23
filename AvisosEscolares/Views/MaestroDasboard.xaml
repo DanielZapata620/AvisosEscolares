@@ -2,7 +2,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="AvisosEscolares.Views.MaestroDasboard"
              Shell.NavBarIsVisible="False"
-             BackgroundColor="#E6E6E6">
+             BackgroundColor="#E6E6E6" >
 
     <Grid RowDefinitions="Auto,Auto,*" BackgroundColor="#F4F7FB">
     <Grid ColumnDefinitions="auto,*,auto" ColumnSpacing="12" Background="#0F2D5E" Padding="10,25,10,10">

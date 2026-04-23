@@ -27,7 +27,7 @@ namespace AvisosEscolaresApi.Mappers
             .ForMember(dest => dest.CantLeidos, opt => opt.MapFrom(src =>src.Avisoalumnoestado.Count(e => e.EstadoId==3)));
 
             CreateMap<Avisoalumnoestado, AvisoPersonalDetallesMaestroDTO>()
-            .ForMember(d => d.AvisoId, o => o.MapFrom(s => s.Aviso.Id))
+            .ForMember(d => d.AvisoId, o => o.MapFrom(s => s.Id))
             .ForMember(d => d.Titulo, o => o.MapFrom(s => s.Aviso.Titulo))
             .ForMember(d => d.Mensaje, o => o.MapFrom(s => s.Aviso.Mensaje))
             .ForMember(d => d.FechaLeido, o => o.MapFrom(s => s.FechaLeido))

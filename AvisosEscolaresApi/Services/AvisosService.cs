@@ -48,7 +48,7 @@ namespace AvisosEscolaresApi.Services
 
         public List<AvisoPersonalDetallesMaestroDTO> ObtenerAvisosPersonales(int id)
         {
-            var avisos = EstadoRepo.Query().Include(x => x.Aviso).Include(x => x.Estado).Where(x => x.AlumnoId == id);
+            var avisos = EstadoRepo.Query().Include(x => x.Aviso).Include(x => x.Estado).Where(x => x.AlumnoId == id && x.Aviso.TipoAvisoId==2);
             return avisos.Select(a => Mapper.Map<AvisoPersonalDetallesMaestroDTO>(a)).ToList();
         }
 
