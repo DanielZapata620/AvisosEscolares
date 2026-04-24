@@ -86,7 +86,7 @@
                                 <VerticalStackLayout Padding="12" Spacing="8">
                                     <Label Text="{Binding Titulo}" FontAttributes="Bold" TextColor="Black" FontSize="15"></Label>
                                     <Label Text="{Binding Mensaje}" FontSize="13" TextColor="Gray" MaxLines="2"></Label>
-                                    <Label Text="Publicado: 12/07/2026" FontSize="11" TextColor="LightGray" HorizontalOptions="End"></Label>
+                                    <!--<Label Text="Publicado: 12/07/2026" FontSize="11" TextColor="LightGray" HorizontalOptions="End"></Label>-->
                                 </VerticalStackLayout>
                             </VerticalStackLayout>
                         </Border>

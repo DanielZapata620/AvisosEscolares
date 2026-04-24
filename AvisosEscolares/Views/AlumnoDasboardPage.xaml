@@ -34,7 +34,7 @@
         </Grid>
 
         <Grid Grid.Row="1" BackgroundColor="#0F2D5E" ColumnDefinitions="*,*">
-            <Button Text="Generales"  TextColor="{Binding _GeneralTextColor}" Background="Transparent" Command="{Binding MostrarAvisosPersonalesAlumnoCommand}" CommandParameter="Generales"></Button>
+            <Button Text="Generales"  TextColor="White" Background="Transparent" Command="{Binding MostrarAvisosPersonalesAlumnoCommand}" CommandParameter="Generales"></Button>
             <Border BackgroundColor="#F05E2B" Padding="4,0" HorizontalOptions="End"
            VerticalOptions="Center" Margin="0,0,30,0">
                 <Label Text="{Binding CantAvisosGeneralesNuevos}" FontSize="10" TextColor="White"></Label>
@@ -43,7 +43,7 @@
                 </Border.StrokeShape>
             </Border>
 
-            <Button Grid.Column="1" Text="Personales" TextColor="{Binding _PersonalesTextColor}" Background="Transparent" Command="{Binding MostrarAvisosPersonalesAlumnoCommand}" CommandParameter="Personales"></Button>
+            <Button Grid.Column="1" Text="Personales" TextColor="White" Background="Transparent" Command="{Binding MostrarAvisosPersonalesAlumnoCommand}" CommandParameter="Personales"></Button>
             <Border Grid.Column="1" BackgroundColor="#F05E2B" Padding="4,0" HorizontalOptions="End"
                        VerticalOptions="Center" Margin="0,0,30,0">
                 <Label Text="{Binding CantAvisosPersonalesNuevos}" FontSize="10" TextColor="White"></Label>
