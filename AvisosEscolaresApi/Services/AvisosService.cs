@@ -58,7 +58,7 @@ namespace AvisosEscolaresApi.Services
 
         public AvisoPersonalAlumnoDTO ObtenerAvisoPersonalAlumno(int id)
         {
-            var aviso = EstadoRepo.Query().Include(x => x.Aviso).ThenInclude(x => x.Avisopersonal).ThenInclude(x => x.Maestro).Include(x => x.Estado).FirstOrDefault(x => x.Id == id ).OrderBy(x => x.EstadoId).ThenBy(x => x.Aviso.FechaCreacion);
+            var aviso = EstadoRepo.Query().Include(x => x.Aviso).ThenInclude(x => x.Avisopersonal).ThenInclude(x => x.Maestro).Include(x => x.Estado).FirstOrDefault(x => x.Id == id );
             return Mapper.Map<AvisoPersonalAlumnoDTO>(aviso);
         }
 
@@ -188,7 +188,7 @@ namespace AvisosEscolaresApi.Services
             
             var resultado = EstadoRepo.Query().Include(x=>x.Estado).Include(x=>x.Aviso).ThenInclude(x=>x.Avisogeneral)
                 .Where(e => e.AlumnoId == alumnoId && e.Aviso.TipoAvisoId == 1)
-                .OrderByDescending(e => e.Aviso.FechaCreacion)
+                .OrderBy(x=>x.EstadoId).ThenBy(x=>x.Aviso.FechaCreacion)
                 .ToList();
 
             

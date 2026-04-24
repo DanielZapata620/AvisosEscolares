@@ -12,18 +12,18 @@ namespace AvisosEscolaresApi.Controllers
     [ApiController]
     public class AuthController : ControllerBase
     {
-        public AuthController(AuthService service, IValidator<LoginDTO> validator,AlumnosServices alumnosService,MaestrosService maestrosService)
+        public AuthController(AuthService service, IValidator<LoginDTO> validator,AlumnosServices alumnosService)
         {
             Service = service;
             Validator = validator;
             AlumnosService = alumnosService;
-            MaestrosService = maestrosService;
+          
         }
 
         public AuthService Service { get; }
         public IValidator<LoginDTO> Validator { get; }
         public AlumnosServices AlumnosService { get; }
-        public MaestrosService MaestrosService { get; }
+        
 
         [HttpPost]
         public IActionResult Login(LoginDTO dto)

@@ -26,7 +26,7 @@
                 </Border.StrokeShape>
 
                 <Border.GestureRecognizers>
-                    <TapGestureRecognizer Command="{Binding CerrarSesionCommand}"></TapGestureRecognizer>
+                    <TapGestureRecognizer Command="{Binding LogoutCommand}"></TapGestureRecognizer>
                 </Border.GestureRecognizers>
 
                 <Image Source="logout.png" WidthRequest="20" HeightRequest="20" HorizontalOptions="Center" VerticalOptions="Center"></Image>
@@ -135,7 +135,7 @@
                                                             <Label Text="{Binding Titulo}" FontAttributes="Bold" TextColor="Black" FontSize="15"></Label>
                                                             <Label Text="{Binding Mensaje}" FontSize="13"
                                                                     TextColor="Gray" MaxLines="2" LineBreakMode="TailTruncation"></Label>
-                                                            <Label Text="{Binding FechaCreacion, StringFormat=': {0:dd/MM/yyyy}'}" FontSize="11" TextColor="LightGray" HorizontalOptions="End"></Label>
+                                                            <Label Text="{Binding FechaCreacion, StringFormat='Fecha de Publicacion: {0:dd/MM/yyyy}'}" FontSize="11" TextColor="LightGray" HorizontalOptions="End"></Label>
                                                         </VerticalStackLayout>
                                                     </VerticalStackLayout>
                                                 </Border>

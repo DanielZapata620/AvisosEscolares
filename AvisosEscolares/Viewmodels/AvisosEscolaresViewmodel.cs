@@ -51,9 +51,22 @@ namespace AvisosEscolares.Viewmodels
 
         public ICommand LoginCommand { get; set; }
 
+        private List<AlumnoDetallesListaDTO> listaAlumnosOriginal = new();
+
+        private string textoBusqueda;
+        public string TextoBusqueda
+        {
+            get => textoBusqueda;
+            set
+            {
+                textoBusqueda = value;
+                PropertyChanged?.Invoke(this, new(nameof(TextoBusqueda)));
+            }
+        }
+
         public ICommand CambiarVistaCommand { get; set; }
         public ICommand CerrarErrorInternetCommand { get; set; }
-        public ICommand CerrarSesionCommand { get; set; }
+        public ICommand LogoutCommand { get; set; }
 
 
         public ICommand AgregarAlumnoCommand { get; set; }
@@ -76,6 +89,8 @@ namespace AvisosEscolares.Viewmodels
         public ICommand MostrarEliminarAvisoCommand { get; set; }
 
         public ICommand EliminarCommand { get; set; }
+
+        public ICommand BusquedaAlumnosCommand { get; set; }
 
         public ICommand CerrarEliminarCommand { get; set; }
 
@@ -106,10 +121,16 @@ namespace AvisosEscolares.Viewmodels
             MostrarEliminarAvisoCommand=new Command<AvisoPersonalListaAlumnoDTO>(MostrarEliminarAviso);
             EliminarCommand=new Command<string>(Eliminar);
             CerrarEliminarCommand = new Command(CerrarEliminar);
-            CerrarSesionCommand = new Command(CerrarSesion);
+            LogoutCommand = new Command(CerrarSesion);
+            BusquedaAlumnosCommand = new Command(BusquedaAlumno);
 
             service.ErrorInternet += Service_ErrorInternet;
 
+        }
+
+        private void BusquedaAlumno()
+        {
+            FiltrarAlumnos();
         }
 
         private void MostrarEliminarAviso(AvisoPersonalListaAlumnoDTO aviso)
@@ -131,7 +152,7 @@ namespace AvisosEscolares.Viewmodels
             ListaAvisosPersonales.Clear();
             CantAvisosGeneralesNuevos = 0;
             CantAvisosPersonalesNuevos = 0;
-            await Shell.Current.GoToAsync("..");
+            await Shell.Current.GoToAsync("login");
         }
 
         private void CerrarEliminar()
@@ -140,6 +161,35 @@ namespace AvisosEscolares.Viewmodels
             PropertyChanged?.Invoke(this, new(nameof(VistaEliminar)));
         }
 
+        private void FiltrarAlumnos()
+        {
+            if (string.IsNullOrWhiteSpace(TextoBusqueda))
+            {
+                ListaAlumnos.Clear();
+                foreach (var a in listaAlumnosOriginal)
+                {
+                    ListaAlumnos.Add(a);
+                }
+            }
+            else
+            {
+                var filtro = TextoBusqueda.ToLower();
+
+                var filtrados = listaAlumnosOriginal
+                    .Where(a =>
+                        (a.Nombre != null && a.Nombre.ToLower().Contains(filtro)) ||
+                        (a.Usuario != null && a.Usuario.ToLower().Contains(filtro))
+                    );
+
+                ListaAlumnos.Clear();
+                foreach (var a in filtrados)
+                {
+                    ListaAlumnos.Add(a);
+                }
+            }
+
+               
+        }
         private void Eliminar(string tipo)
         {
             if (tipo == "Alumno")
@@ -399,6 +449,8 @@ namespace AvisosEscolares.Viewmodels
             {
                 ListaAlumnos.Add(a);
             }
+
+            listaAlumnosOriginal = ListaAlumnos.ToList();
             await Shell.Current.GoToAsync("listaAlumnos");
         }
 
