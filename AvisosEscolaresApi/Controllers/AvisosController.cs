@@ -1,8 +1,10 @@
 ﻿using AvisosEscolaresApi.Models.DTOs;
 using AvisosEscolaresApi.Services;
+using FluentValidation;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System.ComponentModel.DataAnnotations;
 using System.Security.Claims;
 
 namespace AvisosEscolaresApi.Controllers
@@ -12,12 +14,16 @@ namespace AvisosEscolaresApi.Controllers
     [ApiController]
     public class AvisosController : ControllerBase
     {
-        public AvisosController(AvisosService service)
+        public AvisosController(AvisosService service,IValidator<CrearAvisoGeneralDto> crearGeneralValidator,IValidator<CrearAvisoPersonalDto> crearPersonalValidator)
         {
             Service = service;
+            CrearGeneralValidator = crearGeneralValidator;
+            CrearPersonalValidator = crearPersonalValidator;
         }
 
         public AvisosService Service { get; }
+        public IValidator<CrearAvisoGeneralDto> CrearGeneralValidator { get; }
+        public IValidator<CrearAvisoPersonalDto> CrearPersonalValidator { get; }
 
         [HttpGet("generales/vigentes")]
         [Authorize(Roles = "Maestro")]
@@ -92,14 +98,32 @@ namespace AvisosEscolaresApi.Controllers
         [Authorize(Roles = "Maestro")]
         public IActionResult CrearGeneral(CrearAvisoGeneralDto dto)
         {
+            var validacion = CrearGeneralValidator.Validate(dto);
+
+            if (!validacion.IsValid)
+            {
+                var errores = string.Join("\n",
+                    validacion.Errors.Select(e => e.ErrorMessage));
+
+                return BadRequest(errores);
+            }
             Service.CrearAvisoGeneral(dto);
             return Ok();
         }
 
         [HttpPost("personal")]
         [Authorize(Roles = "Maestro")]
-        public IActionResult CrearPersonal([FromBody] CrearAvisoPersonalDto dto)
+        public IActionResult CrearPersonal(CrearAvisoPersonalDto dto)
         {
+            var validacion = CrearPersonalValidator.Validate(dto);
+
+            if (!validacion.IsValid)
+            {
+                var errores = string.Join("\n",
+                    validacion.Errors.Select(e => e.ErrorMessage));
+
+                return BadRequest(errores);
+            }
             Service.CrearAvisoPersonal(dto);
             return Ok();
         }

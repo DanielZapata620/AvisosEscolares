@@ -1,5 +1,6 @@
 ﻿using AvisosEscolaresApi.Models.DTOs;
 using AvisosEscolaresApi.Services;
+using FluentValidation;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -11,12 +12,15 @@ namespace AvisosEscolaresApi.Controllers
     [ApiController]
     public class AlumnosController : ControllerBase
     {
-        public AlumnosController(AlumnosServices service)
+        public AlumnosController(AlumnosServices service,IValidator<AlumnoCreateDTO> crearValidator)
         {
             Service = service;
+            CrearValidator = crearValidator;
         }
 
         public AlumnosServices Service { get; }
+        public IValidator<AlumnoCreateDTO> CrearValidator { get; }
+
         [Authorize(Roles = "Maestro")]
         [HttpGet("grupo")]
         public IActionResult GetAlumnosByGrupo()
@@ -39,13 +43,18 @@ namespace AvisosEscolaresApi.Controllers
         {
             try
             {
+                var validacion = CrearValidator.Validate(dto);
+                if (!validacion.IsValid)
+                {
+                    var errores = string.Join("\n",
+                        validacion.Errors.Select(e => e.ErrorMessage));
+
+                    return BadRequest(errores);
+                }
                 Service.CrearAlumno(dto);
                 return Ok();
             }
-            catch (FluentValidation.ValidationException ex)
-            {
-                return BadRequest(ex.Errors.Select(x => x.ErrorMessage));
-            }
+            
             catch (Exception ex)
             {
                 return BadRequest(ex.Message);

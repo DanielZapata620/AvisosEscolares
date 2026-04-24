@@ -51,10 +51,18 @@
                                 <Entry Placeholder="ESCOLARES" PlaceholderColor="Black" IsReadOnly="True" Text="{Binding NuevoAlumno.Contraseña}"
                                BackgroundColor="#F4F7FB" TextColor="#0F1A2B"></Entry>
                             </Border>
+
+                            <Label FontSize="14" Margin="0,20,0,20" TextColor="Red" Grid.Row="2" Text="{Binding Error}" HorizontalTextAlignment="Center"
+   HorizontalOptions="Center"
+   LineBreakMode="WordWrap" 
+></Label>
                         </VerticalStackLayout>
+                        
+                        
                     </Border>
 
-                    <VerticalStackLayout Spacing="15" Margin="0,40,0,0">
+                    <VerticalStackLayout Spacing="15" Margin="0,30,0,0">
+                        
                         <Button Text="Agregar Alumno" Command="{Binding AgregarAlumnoCommand}"
                         BackgroundColor="#0F2D5E" TextColor="White" FontAttributes="Bold"
                         CornerRadius="15" HeightRequest="60"></Button>

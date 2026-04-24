@@ -11,7 +11,8 @@ namespace AvisosEscolares.Services
     public class AvisosEscolaresServices
     {
         
-        string baseUrl = "https://localhost:7251/";
+        //string baseUrl = "https://localhost:7251/";
+        string baseUrl = "https://avisosapp.duckdns.org/";
         HttpClient client;
         
 
@@ -22,6 +23,8 @@ namespace AvisosEscolares.Services
                 BaseAddress = new Uri(baseUrl)
             };
         }
+
+        //public Action? event 
 
         public void SetToken(string token)
         {
@@ -77,22 +80,26 @@ namespace AvisosEscolares.Services
             return new List<AvisoPersonalListaAlumnoDTO>();
         }
 
-        public async Task CrearAvisoGeneral(CrearAvisoGeneralDto dto)
+        public async Task<string?> CrearAvisoGeneral(CrearAvisoGeneralDto dto)
         {
             var response = await client.PostAsJsonAsync("api/avisos/general", dto);
             if (!response.IsSuccessStatusCode)
             {
-                // Manejar error
+                var error = await response.Content.ReadAsStringAsync();
+                return (error);
             }
+            return null;
         }
 
-        public async Task CrearAvisoPersonal(CrearAvisoPersonalDto dto)
+        public async Task<string?> CrearAvisoPersonal(CrearAvisoPersonalDto dto)
         {
             var response = await client.PostAsJsonAsync("api/avisos/personal", dto);
             if (!response.IsSuccessStatusCode)
             {
-                // Manejar error
+                var error = await response.Content.ReadAsStringAsync();
+                return (error);
             }
+            return null;
         }
 
         //public async Task MarcarAvisoPersonalComoLeido(int alumnoId, int avisoId)
@@ -160,13 +167,15 @@ namespace AvisosEscolares.Services
             }
         }
 
-        public async Task CrearAlumno(AlumnoCreateDTO dto)
+        public async Task<string?> CrearAlumno(AlumnoCreateDTO dto)
         {
             var response = await client.PostAsJsonAsync("api/alumnos", dto);
             if (!response.IsSuccessStatusCode)
             {
-                // Manejar error
+                var error = await response.Content.ReadAsStringAsync();
+                return (error);
             }
+            return null;
         }
     }
 }

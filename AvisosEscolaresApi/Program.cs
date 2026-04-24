@@ -3,6 +3,7 @@ using AvisosEscolaresApi.Repositories;
 using AvisosEscolaresApi.Services;
 using FluentValidation;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
@@ -32,6 +33,11 @@ var cs = builder.Configuration.GetConnectionString("Default");
 builder.Services.AddDbContext<AvisosescolaresContext>(x =>
 {
     x.UseMySql(cs, ServerVersion.AutoDetect(cs));
+});
+
+builder.Services.Configure<ApiBehaviorOptions>(options =>
+{
+    options.SuppressModelStateInvalidFilter = true;
 });
 
 builder.Services.AddScoped(typeof(Repository<>), typeof(Repository<>));

@@ -25,12 +25,12 @@ namespace AvisosEscolaresApi.Controllers
         {
             try
             {
-                var validationResult = Validator.Validate(dto);
+                var validacion = Validator.Validate(dto);
 
-                if (!validationResult.IsValid)
+                if (!validacion.IsValid)
                 {
                     var errores = string.Join("\n",
-                        validationResult.Errors.Select(e => e.ErrorMessage));
+                        validacion.Errors.Select(e => e.ErrorMessage));
 
                     return BadRequest(errores);
                 }

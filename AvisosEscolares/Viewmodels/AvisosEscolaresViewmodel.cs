@@ -259,8 +259,17 @@ namespace AvisosEscolares.Viewmodels
         {
             NuevoAvisoPersonal.MaestroId = (int)maestro.Id;
             NuevoAvisoPersonal.AlumnoId = AlumnoSeleccionado;
-            await service.CrearAvisoPersonal(NuevoAvisoPersonal);
-            VerListaAlumnos();
+            var error = await service.CrearAvisoPersonal(NuevoAvisoPersonal);
+            if (error != null)
+            {
+                Error = error;
+                PropertyChanged?.Invoke(this, new(nameof(Error)));
+            }
+            else
+            {
+                VerListaAlumnos();
+            }
+           
         }
        
 
@@ -268,8 +277,17 @@ namespace AvisosEscolares.Viewmodels
         {
             NuevoAlumno.GrupoId = (int)maestro.GrupoId;
             NuevoAlumno.Contrasena = "ESCOLARES";
-            await service.CrearAlumno(NuevoAlumno);
-            VerListaAlumnos();
+            var error=await service.CrearAlumno(NuevoAlumno);
+            if (error != null)
+            {
+                Error = error;
+                PropertyChanged?.Invoke(this, new(nameof(Error)));
+            }
+            else
+            {
+                VerListaAlumnos();
+            }
+                
         }
 
         private async void VerListaAlumnos()
@@ -286,13 +304,24 @@ namespace AvisosEscolares.Viewmodels
 
         private async void CrearAvisoGeneral()
         {
-            await service.CrearAvisoGeneral(NuevoAvisoGeneral);
-            MostrarAvisosGeneralesMaestro();
+            var error=await service.CrearAvisoGeneral(NuevoAvisoGeneral);
+            if (error != null)
+            {
+                Error = error;
+                PropertyChanged?.Invoke(this, new(nameof(Error)));
+            }
+            else
+            {
+                MostrarAvisosGeneralesMaestro();
+            }
+                
 
         }
 
         private async void CambiarVista(string obj)
         {
+            Error = "";
+            PropertyChanged?.Invoke(this, new(nameof(Error)));
             await Shell.Current.GoToAsync(obj);
         }
 
