@@ -53,6 +53,7 @@ namespace AvisosEscolares.Viewmodels
 
         public ICommand CambiarVistaCommand { get; set; }
         public ICommand CerrarErrorInternetCommand { get; set; }
+        public ICommand CerrarSesionCommand { get; set; }
 
 
         public ICommand AgregarAlumnoCommand { get; set; }
@@ -71,7 +72,8 @@ namespace AvisosEscolares.Viewmodels
         public ICommand MostrarAvisosPersonalesMaestroCommand { get; set; }
         public ICommand MostrarAvisosPersonalesAlumnoCommand { get; set; }
 
-        public ICommand MostrarEliminarCommand { get; set; }
+        public ICommand MostrarEliminarAlumnoCommand { get; set; }
+        public ICommand MostrarEliminarAvisoCommand { get; set; }
 
         public ICommand EliminarCommand { get; set; }
 
@@ -100,13 +102,36 @@ namespace AvisosEscolares.Viewmodels
             VerAvisoGeberalAlumnoCommand = new Command<int>(VerAvisoGeneralAlumno);
             VerDashboardAlumnoCommand = new Command<string>(VerDashboardAlumno);
             CerrarErrorInternetCommand = new Command(CerrarErrorInternet);
-            MostrarEliminarCommand=new Command<int>(MostrarEliminar);
+            MostrarEliminarAlumnoCommand=new Command<AlumnoDetallesListaDTO>(MostrarEliminar);
+            MostrarEliminarAvisoCommand=new Command<AvisoPersonalListaAlumnoDTO>(MostrarEliminarAviso);
             EliminarCommand=new Command<string>(Eliminar);
             CerrarEliminarCommand = new Command(CerrarEliminar);
-            
+            CerrarSesionCommand = new Command(CerrarSesion);
 
             service.ErrorInternet += Service_ErrorInternet;
 
+        }
+
+        private void MostrarEliminarAviso(AvisoPersonalListaAlumnoDTO aviso)
+        {
+            ElementoEliminar = aviso.AvisoId;
+            VistaEliminar = true;
+            PropertyChanged?.Invoke(this, new(nameof(VistaEliminar)));
+        }
+
+        private async void CerrarSesion()
+        {
+            service.cerrarSesion();
+            alumno = null;
+            maestro = null;
+            ListaAlumnos.Clear();
+            AvisosGenerales.Clear();
+            AvisosPersonales.Clear();
+            ListaAvisosGenerales.Clear();
+            ListaAvisosPersonales.Clear();
+            CantAvisosGeneralesNuevos = 0;
+            CantAvisosPersonalesNuevos = 0;
+            await Shell.Current.GoToAsync("..");
         }
 
         private void CerrarEliminar()
@@ -120,19 +145,24 @@ namespace AvisosEscolares.Viewmodels
             if (tipo == "Alumno")
             {
                 service.EliminarAlumno(ElementoEliminar);
-                VerListaAlumnos();
+                var alumno = ListaAlumnos.FirstOrDefault(a => a.Id == ElementoEliminar);
+                ListaAlumnos.Remove(alumno);
 
             }
             else
             {
                 service.EliminarAviso(ElementoEliminar);
-                MostrarAvisosPersonalesMaestro(AlumnoSeleccionado);
+                var aviso = ListaAvisosPersonales.FirstOrDefault(a => a.AvisoId == ElementoEliminar);
+                ListaAvisosPersonales.Remove(aviso);
+
             }
+            VistaEliminar = false;
+            PropertyChanged?.Invoke(this, new(nameof(VistaEliminar)));
         }
 
-        private void MostrarEliminar(int id)
+        private void MostrarEliminar(AlumnoDetallesListaDTO alumno)
         {
-            ElementoEliminar=id;
+            ElementoEliminar=alumno.Id;
             VistaEliminar=true;
             PropertyChanged?.Invoke(this, new(nameof(VistaEliminar)));
         }
@@ -424,6 +454,10 @@ namespace AvisosEscolares.Viewmodels
                     maestro = result.data.Maestro;
                     await Shell.Current.GoToAsync("dashboardMaestro");
                 }
+                LoginDTO = new LoginDTO();
+                PropertyChanged?.Invoke(this, new(nameof(LoginDTO)));
+                Error = "";
+                PropertyChanged?.Invoke(this, new(nameof(Error)));
             }
             else if (result.error != null)
             {

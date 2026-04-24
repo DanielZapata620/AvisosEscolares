@@ -7,14 +7,14 @@
 
     <Grid>
 
-        <Grid BackgroundColor="#80000000" IsVisible="{Binding VistaEliminar}">
+        <Grid BackgroundColor="#80000000" ZIndex="40" IsVisible="{Binding VistaEliminar}">
 
             <Border Padding="24" BackgroundColor="White" HorizontalOptions="Center" VerticalOptions="Center" WidthRequest="300">
                 <Border.StrokeShape>
                     <RoundRectangle CornerRadius="20"></RoundRectangle>
                 </Border.StrokeShape>
                 <VerticalStackLayout Spacing="20">
-                    <Label Text="{Binding Nombre, StringFormat='¿Estás seguro de realizar esta accion , si continuas ya no se podran deshacer los cambios?'}"
+                    <Label Text="¿Estás seguro de realizar esta accion , si continuas ya no se podran deshacer los cambios?"
                FontSize="18"
                TextColor="#333"
                HorizontalTextAlignment="Center"></Label>
@@ -70,8 +70,8 @@
                                     <Label Text="{Binding Titulo}" FontAttributes="Bold" FontSize="14" TextColor="Black" LineBreakMode="WordWrap"></Label>
                                     <Label Grid.Column="1" Text="x" TextColor="Red" FontSize="20" FontAttributes="Bold" BackgroundColor="Transparent" Margin="0,-5,10,0">
                                         <Label.GestureRecognizers>
-                                                <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type ContentPage}}, Path=BindingContext.MostrarEliminarCommand}" 
-                                                CommandParameter="{Binding Id}" />
+                                                <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type ContentPage}}, Path=BindingContext.MostrarEliminarAvisoCommand}" 
+                                                CommandParameter="{Binding .}" />
                                         </Label.GestureRecognizers>
                                     </Label>
                                 </Grid>

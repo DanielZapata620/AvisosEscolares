@@ -25,7 +25,7 @@
             </Border.StrokeShape>
 
             <Border.GestureRecognizers>
-                <TapGestureRecognizer Command="{Binding LogoutCommand}"></TapGestureRecognizer>
+                    <TapGestureRecognizer Command="{Binding CerrarSesionCommand}"></TapGestureRecognizer>
             </Border.GestureRecognizers>
 
             <Image Source="logout.png" WidthRequest="20" HeightRequest="20" HorizontalOptions="Center" VerticalOptions="Center"></Image>

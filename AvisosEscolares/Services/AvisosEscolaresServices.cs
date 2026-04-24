@@ -43,12 +43,20 @@ namespace AvisosEscolares.Services
 
         public async Task<List<AlumnoDetallesListaDTO>> GetAlumnosByGrupo(int grupoId)
         {
-            var response = await client.GetAsync($"api/alumnos/grupo");
-            if (response.IsSuccessStatusCode)
+            try
             {
-                return await response.Content.ReadFromJsonAsync<List<AlumnoDetallesListaDTO>>();
+                var response = await client.GetAsync($"api/alumnos/grupo");
+                if (response.IsSuccessStatusCode)
+                {
+                    return await response.Content.ReadFromJsonAsync<List<AlumnoDetallesListaDTO>>();
+                }
+                return new List<AlumnoDetallesListaDTO>();
             }
-            return new List<AlumnoDetallesListaDTO>();
+            catch (HttpRequestException)
+            {
+                ErrorInternet?.Invoke();
+                return new List<AlumnoDetallesListaDTO>();
+            }
         }
 
         public async Task<(LoginResponseDTO? data, string? error)> Login(LoginDTO loginDto)
@@ -80,37 +88,64 @@ namespace AvisosEscolares.Services
 
         public async Task<List<AvisoGeneralDetallesMaestroDTO>> ObtenerAvisosGeneralesVigentes()
         {
-            var response = await client.GetAsync("api/avisos/generales/vigentes");
-            if (response.IsSuccessStatusCode)
+            try
             {
-                return await response.Content.ReadFromJsonAsync<List<AvisoGeneralDetallesMaestroDTO>>();
+                var response = await client.GetAsync("api/avisos/generales/vigentes");
+                if (response.IsSuccessStatusCode)
+                {
+                    return await response.Content.ReadFromJsonAsync<List<AvisoGeneralDetallesMaestroDTO>>();
+                }
+                return new List<AvisoGeneralDetallesMaestroDTO>();
             }
-            return new List<AvisoGeneralDetallesMaestroDTO>();
+
+            catch (HttpRequestException)
+            {
+                ErrorInternet?.Invoke();
+                return new List<AvisoGeneralDetallesMaestroDTO>();
+            }
+
         }
 
         public async Task<List<AvisoPersonalListaAlumnoDTO>> ObtenerAvisosPersonalesAlumno()
         {
+            try{
             var response = await client.GetAsync($"api/avisos/personales/alumno");
             if (response.IsSuccessStatusCode)
             {
                 return await response.Content.ReadFromJsonAsync<List<AvisoPersonalListaAlumnoDTO>>();
             }
             return new List<AvisoPersonalListaAlumnoDTO>();
+            }
+            catch (HttpRequestException)
+            {
+                ErrorInternet?.Invoke();
+                return new List<AvisoPersonalListaAlumnoDTO>();
+            }
         }
 
         public async Task<string?> CrearAvisoGeneral(CrearAvisoGeneralDto dto)
         {
-            var response = await client.PostAsJsonAsync("api/avisos/general", dto);
-            if (!response.IsSuccessStatusCode)
+            try
             {
-                var error = await response.Content.ReadAsStringAsync();
-                return (error);
+
+                var response = await client.PostAsJsonAsync("api/avisos/general", dto);
+                if (!response.IsSuccessStatusCode)
+                {
+                    var error = await response.Content.ReadAsStringAsync();
+                    return (error);
+                }
+                return null;
             }
-            return null;
+            catch (HttpRequestException)
+            {
+                ErrorInternet?.Invoke();
+                return "Error de conexión";
+            }
         }
 
         public async Task<string?> CrearAvisoPersonal(CrearAvisoPersonalDto dto)
         {
+            try { 
             var response = await client.PostAsJsonAsync("api/avisos/personal", dto);
             if (!response.IsSuccessStatusCode)
             {
@@ -118,6 +153,12 @@ namespace AvisosEscolares.Services
                 return (error);
             }
             return null;
+            }
+            catch (HttpRequestException)
+            {
+                ErrorInternet?.Invoke();
+                return "Error de conexión";
+            }
         }
 
         //public async Task MarcarAvisoPersonalComoLeido(int alumnoId, int avisoId)
@@ -131,6 +172,7 @@ namespace AvisosEscolares.Services
 
         public async Task<List<AvisoGeneralListaAlumnoDTO>> ObtenerAvisosGeneralesPorAlumno()
         {
+            try { 
             var response = await client.GetAsync($"api/avisos/generales");
             if (response.IsSuccessStatusCode)
             {
@@ -138,15 +180,26 @@ namespace AvisosEscolares.Services
             }
             return new List<AvisoGeneralListaAlumnoDTO>();
         }
+    catch (HttpRequestException)
+    {
+        ErrorInternet?.Invoke();
+        return new List<AvisoGeneralListaAlumnoDTO>();
+    }
+}
 
         public async Task MarcarAvisosPersonalesLeidos(List<int> avisoIds, int alumnoId)
         {
-            var response = await client.PutAsJsonAsync($"api/avisos/personal/marcarleidos", avisoIds);
-            if (!response.IsSuccessStatusCode)
+            try
             {
-                // Manejar error
+                var response = await client.PutAsJsonAsync($"api/avisos/personal/marcarleidos", avisoIds);
             }
-        }
+            
+    catch (HttpRequestException)
+    {
+        ErrorInternet?.Invoke();
+    }
+
+}
         public async Task<List<AvisoPersonalDetallesMaestroDTO>> ObtenerAvisosPersonalesPorAlumno(int alumnoId)
         {
             var response = await client.GetAsync($"api/avisos/personales/{alumnoId}");
@@ -159,53 +212,96 @@ namespace AvisosEscolares.Services
 
         public async Task<AvisoPersonalListaAlumnoDTO> ObtenerAvisoPersonalAlumno(int idAviso)
         {
+            try { 
             var response = await client.GetAsync($"api/avisos/personal/alumno/{idAviso}");
             if (response.IsSuccessStatusCode)
             {
                 return await response.Content.ReadFromJsonAsync<AvisoPersonalListaAlumnoDTO>();
             }
             return null;
+            }
+            catch (HttpRequestException)
+            {
+                ErrorInternet?.Invoke();
+                return null;
+            }
         }
 
         public async Task<AvisoGeneralListaAlumnoDTO> ObtenerAvisoGeneralAlumno(int idAviso)
         {
-            var response = await client.GetAsync($"api/avisos/general/alumno/{idAviso}");
-            if (response.IsSuccessStatusCode)
+            try
             {
-                return await response.Content.ReadFromJsonAsync<AvisoGeneralListaAlumnoDTO>();
+                var response = await client.GetAsync($"api/avisos/general/alumno/{idAviso}");
+                if (response.IsSuccessStatusCode)
+                {
+                    return await response.Content.ReadFromJsonAsync<AvisoGeneralListaAlumnoDTO>();
+                }
+                return null;
             }
-            return null;
+            catch (HttpRequestException)
+            {
+                ErrorInternet?.Invoke();
+                return null;
+            }
         }
 
         public async Task MarcarAvisoLeido(int avisoId)
         {
-            var response = await client.PutAsync($"api/avisos/marcarleido/{avisoId}", null);
-            if (!response.IsSuccessStatusCode)
+            try
             {
-                // Manejar error
+                var response = await client.PutAsync($"api/avisos/marcarleido/{avisoId}", null);
+            }
+            catch (HttpRequestException)
+            {
+                ErrorInternet?.Invoke();
+
             }
         }
 
         public async Task<string?> CrearAlumno(AlumnoCreateDTO dto)
         {
-            var response = await client.PostAsJsonAsync("api/alumnos", dto);
-            if (!response.IsSuccessStatusCode)
+            try
             {
-                var error = await response.Content.ReadAsStringAsync();
-                return (error);
+
+
+                var response = await client.PostAsJsonAsync("api/alumnos", dto);
+                if (!response.IsSuccessStatusCode)
+                {
+                    var error = await response.Content.ReadAsStringAsync();
+                    return (error);
+                }
+                return null;
             }
-            return null;
+            catch (HttpRequestException)
+            {
+                ErrorInternet?.Invoke();
+                return "Error de conexión";
+            }
         }
 
         public async void EliminarAlumno(int id)
         {
-            var response = await client.DeleteAsync($"api/alumnos/borrar/{id}");
+            try
+            {
+                var response = await client.DeleteAsync($"api/alumnos/borrar/{id}");
+            }
+            catch (HttpRequestException)
+            {
+                ErrorInternet?.Invoke();
+            }
 
         }
 
         public async void EliminarAviso(int id)
         {
-            var response = await client.DeleteAsync($"api/avisos/borrarpersonal/{id}");
+            try
+            {
+                var response = await client.DeleteAsync($"api/avisos/borrarpersonal/{id}");
+            }
+            catch (HttpRequestException)
+            {
+                ErrorInternet?.Invoke();
+            }
         }
     }
 }
