@@ -11,8 +11,7 @@
                     <RoundRectangle CornerRadius="25"></RoundRectangle>
                 </Border.StrokeShape>
 
-                <Label Text="AH" TextColor="White" HorizontalOptions="Center" VerticalOptions="Center"
-                   FontSize="20" FontAttributes="Bold"></Label>
+                <Image Source="usuario.png" HeightRequest="30" WidthRequest="30"></Image>
             </Border>
 
             <VerticalStackLayout Grid.Column="1" Spacing="2">
@@ -91,8 +90,6 @@
                     </Border>
 
                     <Grid IsVisible="{Binding IsGeneralesVisible}" Margin="-20">
-
-                        <!--MENSAJES GENERALES-->
                         <ScrollView>
                             <VerticalStackLayout Spacing="10" Padding="0,10">
                                 <CollectionView ItemsSource="{Binding ListaAvisosGenerales}">
@@ -114,21 +111,31 @@
                                                             <Label Text="Comunicado general" FontAttributes="Bold" FontSize="14" TextColor="#80FFFFFF"></Label>
 
                                                             <Border Grid.Column="1" BackgroundColor="#69c9c5" Padding="10,2" Stroke="Transparent"
-                                VerticalOptions="Start" Margin="0,0,10,0">
+                                                                    VerticalOptions="Start" Margin="0,0,10,0">
                                                                 <Border.StrokeShape>
                                                                     <RoundRectangle CornerRadius="10"/>
                                                                 </Border.StrokeShape>
                                                                 <Label Text="{Binding FechaCaducidad, StringFormat='Vigencia: {0:dd/MM/yyyy}'}" FontSize="10" TextColor="White" FontAttributes="Bold"></Label>
                                                             </Border>
-                                                            <Label Text="{Binding Estado}" FontSize="11" TextColor="Orange" Opacity="1" FontAttributes="Bold" Grid.Column="2" HorizontalOptions="Center" VerticalOptions="Center"></Label>
+                                                            <Label Text="{Binding Estado}" FontSize="11" TextColor="Orange" Opacity="1" FontAttributes="Bold" Grid.Column="2" HorizontalOptions="Center" VerticalOptions="Center">
+                                                                <Label.Triggers>
+                                                                    <DataTrigger TargetType="Label" Binding="{Binding Estado}" Value="Nuevo" >
+                                                                        <Setter Property="TextColor" Value="#C63A0E"></Setter>
+                                                                    </DataTrigger>
+                                                                    <DataTrigger TargetType="Label" Binding="{Binding Estado}" Value="Recibido" >
+                                                                        <Setter Property="TextColor" Value="#8A5A0A"></Setter>
+                                                                    </DataTrigger>
+                                                                    <DataTrigger TargetType="Label" Binding="{Binding Estado}" Value="Leído">
+                                                                        <Setter Property="TextColor" Value="Green"></Setter>
+                                                                    </DataTrigger>
+                                                                </Label.Triggers>
+                                                            </Label>
                                                         </Grid>
                                                         <VerticalStackLayout Padding="12" Spacing="8">
                                                             <Label Text="{Binding Titulo}" FontAttributes="Bold" TextColor="Black" FontSize="15"></Label>
-                                                            <Label Text="{Binding Mensaje}"
-                FontSize="13"
-                TextColor="Gray" MaxLines="2" LineBreakMode="TailTruncation"></Label>
-
-                                                            <Label Text="Publicado: 12/07/2026" FontSize="11" TextColor="LightGray" HorizontalOptions="End"></Label>
+                                                            <Label Text="{Binding Mensaje}" FontSize="13"
+                                                                    TextColor="Gray" MaxLines="2" LineBreakMode="TailTruncation"></Label>
+                                                            <Label Text="{Binding FechaCreacion, StringFormat=': {0:dd/MM/yyyy}'}" FontSize="11" TextColor="LightGray" HorizontalOptions="End"></Label>
                                                         </VerticalStackLayout>
                                                     </VerticalStackLayout>
                                                 </Border>
@@ -141,9 +148,6 @@
                     </Grid>
 
                     <Grid IsVisible="{Binding IsPersonalesVisible}">
-
-                        <!--MENSAJES PERSONALES-->
-
                         <ScrollView>
                             <VerticalStackLayout Spacing="10" Padding="0,10">
                                 <CollectionView ItemsSource="{Binding ListaAvisosPersonales}">
@@ -151,8 +155,7 @@
                                         <DataTemplate>
                                             <ContentView>
                                                 <ContentView.GestureRecognizers>
-                                                    <TapGestureRecognizer Command="{Binding BindingContext.VerAvisoPersonalAlumnoCommand, Source={RelativeSource AncestorType={x:Type CollectionView}}}"
-CommandParameter="{Binding AvisoId}"/>
+                                                    <TapGestureRecognizer Command="{Binding BindingContext.VerAvisoPersonalAlumnoCommand, Source={RelativeSource AncestorType={x:Type CollectionView}}}" CommandParameter="{Binding AvisoId}"></TapGestureRecognizer>
                                                 </ContentView.GestureRecognizers>
 
                                                 <Border Margin="16,6" BackgroundColor="White" Padding="0">
@@ -165,18 +168,41 @@ CommandParameter="{Binding AvisoId}"/>
                                                     </Border.Shadow>
 
                                                     <Grid ColumnDefinitions="6,*,Auto" Padding="12" ColumnSpacing="10">
-                                                        <BoxView Grid.Column="0" WidthRequest="6" CornerRadius="3" Color="Orange"></BoxView>
+                                                        <BoxView Grid.Column="0" WidthRequest="6" CornerRadius="3" Color="Orange">
+                                                            <BoxView.Triggers>
+                                                                <DataTrigger TargetType="BoxView" Binding="{Binding Estado}" Value="Nuevo" >
+                                                                    <Setter Property="Color" Value="#C63A0E"></Setter>
+                                                                </DataTrigger>
+                                                                <DataTrigger TargetType="BoxView" Binding="{Binding Estado}" Value="Recibido" >
+                                                                    <Setter Property="Color" Value="#8A5A0A"></Setter>
+                                                                </DataTrigger>
+                                                                <DataTrigger TargetType="BoxView" Binding="{Binding Estado}" Value="Leído">
+                                                                    <Setter Property="Color" Value="Green"></Setter>
+                                                                </DataTrigger>
+                                                            </BoxView.Triggers>
+                                                        </BoxView>
 
                                                         <VerticalStackLayout Grid.Column="1" Spacing="6">
                                                             <Grid ColumnDefinitions="*,Auto">
 
                                                                 <Label Text="{Binding Titulo}" FontAttributes="Bold" FontSize="14" TextColor="Black" LineBreakMode="WordWrap"></Label>
 
-                                                                <Label Grid.Column="1" Text="{Binding Estado}" FontSize="11" TextColor="Orange" FontAttributes="Bold" VerticalOptions="Center"></Label>
+                                                                <Label Grid.Column="1" Text="{Binding Estado}" FontSize="11" TextColor="Orange" FontAttributes="Bold" VerticalOptions="Center">
+                                                                    <Label.Triggers>
+                                                                        <DataTrigger TargetType="Label" Binding="{Binding Estado}" Value="Nuevo" >
+                                                                            <Setter Property="TextColor" Value="#C63A0E"></Setter>
+                                                                        </DataTrigger>
+                                                                        <DataTrigger TargetType="Label" Binding="{Binding Estado}" Value="Recibido" >
+                                                                            <Setter Property="TextColor" Value="#8A5A0A"></Setter>
+                                                                        </DataTrigger>
+                                                                        <DataTrigger TargetType="Label" Binding="{Binding Estado}" Value="Leído">
+                                                                            <Setter Property="TextColor" Value="Green"></Setter>
+                                                                        </DataTrigger>
+                                                                    </Label.Triggers>
+                                                                </Label>
                                                             </Grid>
 
-                                                            <Label Text="{Binding Mensaje}"
-                   FontSize="13" TextColor="Gray" LineBreakMode="TailTruncation" MaxLines="2" ></Label>
+                                                            <Label Text="{Binding Mensaje}" FontSize="13" TextColor="Gray" LineBreakMode="TailTruncation" MaxLines="2" ></Label>
 
                                                             <Grid ColumnDefinitions="*,Auto">
                                                                 <Label Text="{Binding Maestro,StringFormat='Profesor: {0}'}" FontSize="11" TextColor="#A0AFBF"></Label>

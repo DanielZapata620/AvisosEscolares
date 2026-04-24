@@ -363,6 +363,8 @@ namespace AvisosEscolares.Viewmodels
             else
             {
                 VerListaAlumnos();
+                NuevoAvisoPersonal = new();
+                PropertyChanged?.Invoke(this, new(nameof(NuevoAvisoPersonal)));
             }
             isLoading = false;
             PropertyChanged?.Invoke(this, new(nameof(isLoading)));
@@ -382,6 +384,8 @@ namespace AvisosEscolares.Viewmodels
             else
             {
                 VerListaAlumnos();
+                NuevoAlumno = new();
+                PropertyChanged?.Invoke(this, new(nameof(NuevoAlumno)));
             }
 
         }
@@ -409,6 +413,8 @@ namespace AvisosEscolares.Viewmodels
             else
             {
                 MostrarAvisosGeneralesMaestro();
+                NuevoAvisoGeneral = new();
+                PropertyChanged?.Invoke(this, new(nameof(NuevoAvisoGeneral)));
             }
 
 
