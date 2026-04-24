@@ -5,6 +5,9 @@
              Title="AgregarAvisoPersonalView" Shell.NavBarIsVisible="False">
 
     <Grid RowDefinitions="Auto,*" BackgroundColor="#F4F7FB">
+        <Border Background="#8052A2B4" ZIndex="1" IsVisible="{Binding isLoading}">
+            <ActivityIndicator Margin="10" IsVisible="{Binding isLoading}" IsRunning="True"></ActivityIndicator>
+        </Border>
         <Grid ColumnDefinitions="Auto,*,Auto" BackgroundColor="#0F2D5E" Padding="20">
             <Label Grid.Column="1" Text="Agrega aviso personal" TextColor="White" FontAttributes="Bold" FontSize="20" HorizontalOptions="Center" VerticalOptions="Center"></Label>
         </Grid>

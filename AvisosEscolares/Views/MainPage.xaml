@@ -5,8 +5,33 @@
              BackgroundColor="Navy"
              Shell.NavBarIsVisible="False">
 
+    <Grid  >
 
-    <Grid RowDefinitions="*, auto, auto">
+        <Grid ZIndex="20" HorizontalOptions="Fill" VerticalOptions="Fill" BackgroundColor="#80000000" IsVisible="{Binding VistaErrorInternet}">
+            
+            <Border
+         Padding="20"
+         StrokeShape="12"
+         BackgroundColor="#FFFFFF"
+         HorizontalOptions="Center"
+         VerticalOptions="Center">
+                <Border.GestureRecognizers>
+                    <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type ContentPage}}, Path=BindingContext.CerrarErrorInternetCommand}"></TapGestureRecognizer>
+                </Border.GestureRecognizers>
+                <VerticalStackLayout Spacing="10">
+                    
+                    <Image Source="mensaje.png" WidthRequest="50" HeightRequest="50" HorizontalOptions="Center"></Image>
+
+                    <Label Text="Sin conexión a internet" FontSize="18" TextColor="Gray" HorizontalTextAlignment="Center" ></Label>
+
+                    <Label Text="Para solucionar el problema verifica tu conexion a internet o llama a la oficina." FontSize="15" TextColor="Gray" HorizontalTextAlignment="Center" ></Label>
+
+                </VerticalStackLayout>
+            </Border>
+        </Grid>
+
+
+        <Grid RowDefinitions="*, auto, auto">
         <Border Background="#8052A2B4" ZIndex="1" IsVisible="{Binding isLoading}">
             <ActivityIndicator Margin="10" IsVisible="{Binding isLoading}" IsRunning="True"></ActivityIndicator>
         </Border>
@@ -55,9 +80,8 @@
                         </Image>
                     </Border>
 
-                    <Label Text="ITESRC" FontSize="25" FontAttributes="Bold" TextColor="White" HorizontalOptions="Center"></Label>
-
-                    <Label Text="Sistema Escolar Integral" FontSize="15" TextColor="#80FFFFFF" HorizontalOptions="Center"></Label>
+                    <Label Text="CETIS No. 12" FontSize="25" FontAttributes="Bold" TextColor="White" HorizontalOptions="Center"></Label>
+                    <Label Text="Sistema Escolar Integral" Margin="0,10,0,0" FontSize="15" TextColor="#80FFFFFF" HorizontalOptions="Center"></Label>
                 </VerticalStackLayout>
 
 
@@ -78,12 +102,11 @@
                 </VerticalStackLayout>
 
                 <Label Grid.Row="2" Text="{Binding Error}" HorizontalTextAlignment="Center"
-    HorizontalOptions="Center"
-    LineBreakMode="WordWrap" FontSize="15"
-TextColor="#90FFFFFF" ></Label>
+                        HorizontalOptions="Center"
+                        LineBreakMode="WordWrap" FontSize="15" TextColor="#90FFFFFF" ></Label>
 
 
-                <Button Margin="0,10,0,0" Text="Iniciar Sesión" HeightRequest="50" CornerRadius="15" 
+                <Button Margin="0,0,0,0" Text="Iniciar Sesión" HeightRequest="50" CornerRadius="15" 
                         FontAttributes="Bold" 
                         BackgroundColor="#0EA5A0"
                         TextColor="White" Command="{Binding LoginCommand}">
@@ -97,6 +120,5 @@ TextColor="#90FFFFFF" ></Label>
     </Grid>
 
 
-    
-
+    </Grid>
 </ContentPage>

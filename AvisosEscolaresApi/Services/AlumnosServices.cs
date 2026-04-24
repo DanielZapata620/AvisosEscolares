@@ -10,18 +10,20 @@ namespace AvisosEscolaresApi.Services
     
     public class AlumnosServices
     {
-        public AlumnosServices(Repository<Alumno> repoAlumno, Repository<Grupo> repoGrupo, AgregarAlumnoValidator agregarValidator,IMapper mapper)
+        public AlumnosServices(Repository<Alumno> repoAlumno, Repository<Grupo> repoGrupo, AgregarAlumnoValidator agregarValidator,IMapper mapper, Repository<Maestro> repoMaestro)
         {
             RepoAlumno = repoAlumno;
             RepoGrupo = repoGrupo;
             AgregarValidator = agregarValidator;
             Mapper = mapper;
+            RepoMaestro = repoMaestro;
         }
 
         public Repository<Alumno> RepoAlumno { get; }
         public Repository<Grupo> RepoGrupo { get; }
         public AgregarAlumnoValidator AgregarValidator { get; }
         public IMapper Mapper { get; }
+        public Repository<Maestro> RepoMaestro { get; }
 
         public List<AlumnoDetallesListaDTO> ObtenerAlumnosByGrupo(int grupoId)
         {
@@ -30,6 +32,14 @@ namespace AvisosEscolaresApi.Services
             if(alumnos.Any(a => a.GrupoId != grupoId))
                 throw new UnauthorizedAccessException();
             return alumnos.Select(a => Mapper.Map<AlumnoDetallesListaDTO>(a)).ToList();
+        }
+
+        
+        public AlumnoDTO ObtenerAlumnoById(int id)
+        {
+            var alumno = RepoAlumno.Get(id);
+           
+            return Mapper.Map<AlumnoDTO>(alumno);
         }
 
         public void CrearAlumno(AlumnoCreateDTO dto)

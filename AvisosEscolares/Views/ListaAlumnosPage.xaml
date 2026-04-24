@@ -6,7 +6,32 @@
 
 
 
-    <Grid RowDefinitions="Auto,Auto,*" BackgroundColor="#F4F7FB">
+
+    <Grid>
+
+        <Grid BackgroundColor="#80000000" IsVisible="{Binding VistaEliminar}">
+
+            <Border Padding="24" BackgroundColor="White" HorizontalOptions="Center" VerticalOptions="Center" WidthRequest="300">
+                <Border.StrokeShape>
+                    <RoundRectangle CornerRadius="20"></RoundRectangle>
+                </Border.StrokeShape>
+                <VerticalStackLayout Spacing="20">
+                    <Label Text="{Binding Nombre, StringFormat='¿Estás seguro de realizar esta accion , si continuas ya no se podran deshacer los cambios?'}"
+                   FontSize="18"
+                   TextColor="#333"
+                   HorizontalTextAlignment="Center"></Label>
+                    <HorizontalStackLayout Spacing="12" HorizontalOptions="Center">
+                        <Button Text="Cancelar" BackgroundColor="#E0E0E0" TextColor="Black" CornerRadius="10"                        
+                        Command="{Binding CerrarEliminarCommand}" ></Button>
+
+                        <Button Text="Eliminar" BackgroundColor="#E53935" TextColor="White" CornerRadius="10"
+                        Command="{Binding EliminarCommand}" CommandParameter="Alumno"></Button>
+                    </HorizontalStackLayout>
+                </VerticalStackLayout>
+            </Border>
+        </Grid>
+
+        <Grid RowDefinitions="Auto,Auto,*" BackgroundColor="#F4F7FB">
         <Grid ColumnDefinitions="auto,*,auto" ColumnSpacing="12" Background="#0F2D5E" Padding="10,25,10,10">
             <Border WidthRequest="50" HeightRequest="50" BackgroundColor="#0EA5A0" Stroke="#0C7A76">
                 <Border.StrokeShape>
@@ -32,7 +57,6 @@
 
                 <Image Source="logout.png" WidthRequest="20" HeightRequest="20" HorizontalOptions="Center" VerticalOptions="Center"></Image>
             </Border>
-
         </Grid>
 
         <Grid Grid.Row="1">
@@ -64,7 +88,11 @@
                         </Border.StrokeShape>
 
                         <Grid ColumnDefinitions="auto,*" ColumnSpacing="10">
-                            <Image Source="search.png" WidthRequest="20" HeightRequest="20"></Image>
+                            <Image Source="search.png" WidthRequest="20" HeightRequest="20">
+                                <Image.GestureRecognizers>
+                                    <TapGestureRecognizer></TapGestureRecognizer>
+                                </Image.GestureRecognizers>
+                            </Image>
                             <Entry Grid.Column="1" Placeholder="Buscar alumno....." FontSize="14" TextColor="#0F1A2B" PlaceholderColor="#A0AFBF" BackgroundColor="Transparent"></Entry>
                         </Grid>
                     </Border>
@@ -76,7 +104,7 @@
                                         <RoundRectangle CornerRadius="10"></RoundRectangle>
                                     </Border.StrokeShape>
                                     <Border.GestureRecognizers>
-                                        <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type ContentPage}}, Path=BindingContext.MostrarAvisosPersonalesMaestroCommand}" CommandParameter="{Binding Id}"></TapGestureRecognizer>
+                                        <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type ContentPage}}, Path=BindingContext.MostrarAvisosPersonalesMaestroCommand}" CommandParameter="{Binding .}"></TapGestureRecognizer>
                                     </Border.GestureRecognizers>
 
                                     <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="12">
@@ -97,19 +125,19 @@
                                         <HorizontalStackLayout Grid.Column="2" Spacing="15" VerticalOptions="Center">
                                             <Image Source="ojo.png" WidthRequest="20" HeightRequest="20">
                                                 <Image.GestureRecognizers>
-                                                    <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type ContentPage}}, Path=BindingContext.MostrarAvisosPersonalesMaestroCommand}" CommandParameter="{Binding Id}"></TapGestureRecognizer>
+                                                    <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type ContentPage}}, Path=BindingContext.MostrarAvisosPersonalesMaestroCommand}" CommandParameter="{Binding .}"></TapGestureRecognizer>
                                                 </Image.GestureRecognizers>
                                             </Image>
 
                                             <Image Source="addmensaje.png" WidthRequest="20" HeightRequest="20">
                                                 <Image.GestureRecognizers>
-                                                    <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type ContentPage}}, Path=BindingContext.MostrarCrearAvisoPersonalCommand}" CommandParameter="{Binding Id}"/>
+                                                    <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type ContentPage}}, Path=BindingContext.MostrarCrearAvisoPersonalCommand}" CommandParameter="{Binding .}"/>
                                                 </Image.GestureRecognizers>
                                             </Image>
 
                                             <Image Source="delete_icon.png" WidthRequest="18" HeightRequest="18">
                                                 <Image.GestureRecognizers>
-                                                    <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type ContentPage}}, Path=BindingContext.EliminarAlumnoCommand}" CommandParameter="{Binding .}"/>
+                                                    <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type ContentPage}}, Path=BindingContext.MostrarEliminarCommand}" CommandParameter="{Binding Id}"/>
                                                 </Image.GestureRecognizers>
                                             </Image>
                                         </HorizontalStackLayout>
@@ -121,7 +149,7 @@
                 </VerticalStackLayout>
             </ScrollView>
         </Grid>
-
+    </Grid>
     </Grid>
 
 

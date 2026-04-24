@@ -1,20 +1,22 @@
-﻿using AvisosEscolares.Models.DTOs;
+﻿
+using AvisosEscolares.Models.DTOs;
 
 using System;
 using System.Collections.Generic;
 using System.Net.Http.Json;
 using System.Text;
+using System.Threading.Tasks;
 
 
 namespace AvisosEscolares.Services
 {
     public class AvisosEscolaresServices
     {
-        
-        //string baseUrl = "https://localhost:7251/";
-        string baseUrl = "https://avisosapp.duckdns.org/";
+
+        string baseUrl = "https://localhost:7251/";
+        //string baseUrl = "https://avisosapp.duckdns.org/";
         HttpClient client;
-        
+
 
         public AvisosEscolaresServices()
         {
@@ -24,12 +26,19 @@ namespace AvisosEscolares.Services
             };
         }
 
-        //public Action? event 
+        public event Action? ErrorInternet;
 
-        public void SetToken(string token)
+        public async Task SetToken(string token)
         {
             client.DefaultRequestHeaders.Authorization =
                 new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
+            await SecureStorage.SetAsync("token", token);
+        }
+
+        public void cerrarSesion()
+        {
+            client.DefaultRequestHeaders.Authorization = null;
+            SecureStorage.Remove("token");
         }
 
         public async Task<List<AlumnoDetallesListaDTO>> GetAlumnosByGrupo(int grupoId)
@@ -44,19 +53,28 @@ namespace AvisosEscolares.Services
 
         public async Task<(LoginResponseDTO? data, string? error)> Login(LoginDTO loginDto)
         {
-            var response = await client.PostAsJsonAsync("api/auth/", loginDto);
-
-            if (response.IsSuccessStatusCode)
+            try
             {
-                var loginResponse = await response.Content.ReadFromJsonAsync<LoginResponseDTO>();
-                SetToken(loginResponse.Token);
-                return (loginResponse, null);
+                var response = await client.PostAsJsonAsync("api/auth/", loginDto);
+
+                if (response.IsSuccessStatusCode)
+                {
+                    var loginResponse = await response.Content.ReadFromJsonAsync<LoginResponseDTO>();
+                    SetToken(loginResponse.Token);
+                    return (loginResponse, null);
+                }
+
+                var error = await response.Content.ReadAsStringAsync();
+
+
+                return (null, error);
+            }
+            catch (HttpRequestException)
+            {
+                ErrorInternet?.Invoke();
+                return (null, null);
             }
 
-            var error = await response.Content.ReadAsStringAsync();
-           
-            
-            return (null, error);
         }
 
 
@@ -139,7 +157,8 @@ namespace AvisosEscolares.Services
             return new List<AvisoPersonalDetallesMaestroDTO>();
         }
 
-        public async Task<AvisoPersonalListaAlumnoDTO> ObtenerAvisoPersonalAlumno(int idAviso) { 
+        public async Task<AvisoPersonalListaAlumnoDTO> ObtenerAvisoPersonalAlumno(int idAviso)
+        {
             var response = await client.GetAsync($"api/avisos/personal/alumno/{idAviso}");
             if (response.IsSuccessStatusCode)
             {
@@ -160,7 +179,7 @@ namespace AvisosEscolares.Services
 
         public async Task MarcarAvisoLeido(int avisoId)
         {
-            var response = await client.PutAsync($"api/avisos/marcarleido/{avisoId}",null);
+            var response = await client.PutAsync($"api/avisos/marcarleido/{avisoId}", null);
             if (!response.IsSuccessStatusCode)
             {
                 // Manejar error
@@ -176,6 +195,17 @@ namespace AvisosEscolares.Services
                 return (error);
             }
             return null;
+        }
+
+        public async void EliminarAlumno(int id)
+        {
+            var response = await client.DeleteAsync($"api/alumnos/borrar/{id}");
+
+        }
+
+        public async void EliminarAviso(int id)
+        {
+            var response = await client.DeleteAsync($"api/avisos/borrarpersonal/{id}");
         }
     }
 }

@@ -4,6 +4,7 @@ using FluentValidation;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 
 namespace AvisosEscolaresApi.Controllers
 {
@@ -37,6 +38,18 @@ namespace AvisosEscolaresApi.Controllers
             }
         }
 
+        [HttpGet("obtenerAlumno")]
+        [Authorize(Roles = "Alumno")]
+        public IActionResult GetAlumnoById()
+        {
+            int.TryParse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value, out int idUsuario);
+            var alumno = Service.ObtenerAlumnoById(idUsuario);
+            if (alumno == null)
+                return NotFound();
+
+            return Ok(alumno);
+        }
+
         [HttpPost]
         [Authorize(Roles = "Maestro")]
         public IActionResult Post(AlumnoCreateDTO dto)
@@ -62,7 +75,7 @@ namespace AvisosEscolaresApi.Controllers
 
         }
 
-        [HttpDelete("alumno/{id}")]
+        [HttpDelete("borrar/{id}")]
         [Authorize(Roles = "Maestro")]
         public IActionResult EliminarAlumno(int id)
         {

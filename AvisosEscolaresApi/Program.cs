@@ -44,6 +44,7 @@ builder.Services.AddScoped(typeof(Repository<>), typeof(Repository<>));
 builder.Services.AddScoped<AuthService>();
 builder.Services.AddScoped<AlumnosServices>();
 builder.Services.AddScoped<AvisosService>();
+builder.Services.AddScoped<MaestrosService>();
 
 
 builder.Services.AddAutoMapper(x => { }, typeof(Program).Assembly);

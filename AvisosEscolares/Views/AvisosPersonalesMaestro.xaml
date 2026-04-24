@@ -5,22 +5,42 @@
              Title="AvisosPersonalesMaestro" Shell.NavBarIsVisible="False">
 
 
-    <Grid RowDefinitions="Auto,Auto,*" BackgroundColor="#F4F7FB">
+    <Grid>
+
+        <Grid BackgroundColor="#80000000" IsVisible="{Binding VistaEliminar}">
+
+            <Border Padding="24" BackgroundColor="White" HorizontalOptions="Center" VerticalOptions="Center" WidthRequest="300">
+                <Border.StrokeShape>
+                    <RoundRectangle CornerRadius="20"></RoundRectangle>
+                </Border.StrokeShape>
+                <VerticalStackLayout Spacing="20">
+                    <Label Text="{Binding Nombre, StringFormat='¿Estás seguro de realizar esta accion , si continuas ya no se podran deshacer los cambios?'}"
+               FontSize="18"
+               TextColor="#333"
+               HorizontalTextAlignment="Center"></Label>
+                    <HorizontalStackLayout Spacing="12" HorizontalOptions="Center">
+                        <Button Text="Cancelar" BackgroundColor="#E0E0E0" TextColor="Black" CornerRadius="10"                        
+                    Command="{Binding CerrarEliminarCommand}" ></Button>
+
+                        <Button Text="Eliminar" BackgroundColor="#E53935" TextColor="White" CornerRadius="10"
+                    Command="{Binding EliminarCommand}" CommandParameter="Maestro"></Button>
+                    </HorizontalStackLayout>
+                </VerticalStackLayout>
+            </Border>
+        </Grid>
+        <Grid RowDefinitions="Auto,Auto,*" BackgroundColor="#F4F7FB">
         <Grid ColumnDefinitions="auto,*,auto" ColumnSpacing="12" Background="#0F2D5E" Padding="10,25,10,10">
             <Border WidthRequest="50" HeightRequest="50" BackgroundColor="#0EA5A0" Stroke="#0C7A76">
                 <Border.StrokeShape>
                     <RoundRectangle CornerRadius="25"></RoundRectangle>
                 </Border.StrokeShape>
-                <Label Text="A" TextColor="White" HorizontalOptions="Center" VerticalOptions="Center" FontSize="20" FontAttributes="Bold"></Label>
+                <Label Text="{Binding AlumnoSeleccionado.Nombre}" TextColor="White" HorizontalOptions="Center" VerticalOptions="Center" FontSize="20" FontAttributes="Bold"></Label>
             </Border>
 
             <VerticalStackLayout Grid.Column="1" VerticalOptions="Center">
-                <Label Text="{Binding Nombre}" FontSize="15" FontAttributes="Bold" TextColor="White"></Label>
+                <Label Text="{Binding AlumnoSeleccionado.Nombre}" FontSize="15" FontAttributes="Bold" TextColor="White"></Label>
                 <HorizontalStackLayout>
-                    <Label Text="{Binding Usuario}" FontSize="12" TextColor="#70FFFFFF" Margin="0,0,10,0"></Label>
-                    <Label Text=" ·" FontSize="12" TextColor="#70FFFFFF" Margin="0,0,10,0"></Label>
-                    <Label Text="Grupo:" FontSize="12" TextColor="#70FFFFFF" Margin="0,0,5,0"></Label>
-                    <Label Text="{Binding Grupo}" FontSize="12" TextColor="#70FFFFFF"></Label>
+                    <Label Text="{Binding AlumnoSeleccionado.Usuario, StringFormat= Matrícula: {0}}" FontSize="12" TextColor="#70FFFFFF" Margin="0,0,10,0"></Label>
                 </HorizontalStackLayout>
             </VerticalStackLayout>
             <Button Text="⟵" FontAttributes="Bold" FontSize="12" TextColor="White" BackgroundColor="#50000000" Grid.Column="2" Command="{Binding CambiarVistaCommand}" CommandParameter="listaAlumnos"></Button>
@@ -28,7 +48,7 @@
 
         <CollectionView Grid.Row="2" ItemsSource="{Binding AvisosPersonales}" SelectionMode="None" Margin="10">
             <CollectionView.ItemsLayout>
-                <LinearItemsLayout Orientation="Vertical" ItemSpacing="20" />
+                <LinearItemsLayout Orientation="Vertical" ItemSpacing="5"></LinearItemsLayout>
             </CollectionView.ItemsLayout>
 
             <CollectionView.ItemTemplate>
@@ -50,13 +70,13 @@
                                     <Label Text="{Binding Titulo}" FontAttributes="Bold" FontSize="14" TextColor="Black" LineBreakMode="WordWrap"></Label>
                                     <Label Grid.Column="1" Text="x" TextColor="Red" FontSize="20" FontAttributes="Bold" BackgroundColor="Transparent" Margin="0,-5,10,0">
                                         <Label.GestureRecognizers>
-                                            <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type ContentPage}}, Path=BindingContext.EliminarAvisoCommand}" 
-                                                CommandParameter="{Binding .}" />
+                                                <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type ContentPage}}, Path=BindingContext.MostrarEliminarCommand}" 
+                                                CommandParameter="{Binding Id}" />
                                         </Label.GestureRecognizers>
                                     </Label>
                                 </Grid>
 
-                                <Label Text="{Binding Mensaje}" FontSize="13" TextColor="Gray" LineBreakMode="WordWrap" MaxLines="2"></Label>
+                                <Label Text="{Binding Mensaje}" FontSize="13" TextColor="Gray" LineBreakMode="WordWrap" ></Label>
                                 <Label Grid.Column="1" Text="{Binding Estado}" FontSize="11" TextColor="Orange" FontAttributes="Bold" HorizontalOptions="End"></Label>
                                 <Label Text="Publicado: 12/07/2026" FontSize="11" TextColor="LightGray" HorizontalOptions="End"></Label>
                             </VerticalStackLayout>
@@ -65,5 +85,6 @@
                 </DataTemplate>
             </CollectionView.ItemTemplate>
         </CollectionView>
+    </Grid>
     </Grid>
 </ContentPage>

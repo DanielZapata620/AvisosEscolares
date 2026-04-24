@@ -10,12 +10,17 @@ using System.Windows.Input;
 
 namespace AvisosEscolares.Viewmodels
 {
-    public class AvisosEscolaresViewmodel: INotifyPropertyChanged
+    public class AvisosEscolaresViewmodel : INotifyPropertyChanged
     {
 
         public LoginDTO LoginDTO { get; set; } = new LoginDTO();
 
-        public string Error { get; set; } 
+        public string Error { get; set; }
+
+        public bool VistaErrorInternet { get; set; } = false;
+        public bool VistaEliminar { get; set; } = false;
+        
+        public int ElementoEliminar { get; set; }
 
         public ObservableCollection<AvisoGeneralDetallesMaestroDTO> AvisosGenerales { get; set; } = new();
 
@@ -23,7 +28,7 @@ namespace AvisosEscolares.Viewmodels
         public ObservableCollection<AlumnoDetallesListaDTO> ListaAlumnos { get; set; } = new();
 
 
-        
+
         public ObservableCollection<AvisoPersonalListaAlumnoDTO> ListaAvisosPersonales { get; set; } = new();
         public ObservableCollection<AvisoGeneralListaAlumnoDTO> ListaAvisosGenerales { get; set; } = new();
         public int CantAvisosPersonalesNuevos { get; set; }
@@ -35,9 +40,9 @@ namespace AvisosEscolares.Viewmodels
 
         //Hacer un mapper para poner un aviso y que de ahi seaque el crear y ek editar aviso general
         public CrearAvisoGeneralDto NuevoAvisoGeneral { get; set; } = new CrearAvisoGeneralDto();
-        public CrearAvisoPersonalDto NuevoAvisoPersonal { get; set; } =new CrearAvisoPersonalDto();
+        public CrearAvisoPersonalDto NuevoAvisoPersonal { get; set; } = new CrearAvisoPersonalDto();
 
-        public int AlumnoSeleccionado { get; set; } = new();
+        public AlumnoDetallesListaDTO AlumnoSeleccionado { get; set; } = new();
         public bool isLoading { get; set; }
 
         public AlumnoCreateDTO NuevoAlumno { get; set; } = new AlumnoCreateDTO();
@@ -47,8 +52,10 @@ namespace AvisosEscolares.Viewmodels
         public ICommand LoginCommand { get; set; }
 
         public ICommand CambiarVistaCommand { get; set; }
+        public ICommand CerrarErrorInternetCommand { get; set; }
 
-        public ICommand AgregarAlumnoCommand{ get; set; }
+
+        public ICommand AgregarAlumnoCommand { get; set; }
         public ICommand VerListaAlumnosCommand { get; set; }
         public ICommand VerAvisoPersonalAlumnoCommand { get; set; }
         public ICommand VerAvisoGeberalAlumnoCommand { get; set; }
@@ -57,12 +64,18 @@ namespace AvisosEscolares.Viewmodels
         public ICommand CrearAvisoPersonalCommand { get; set; }
         public ICommand VerDashboardAlumnoCommand { get; set; }
 
-        
+
         public ICommand MostrarAvisosGeneralesMaestroCommand { get; set; }
 
         public ICommand MostrarCrearAvisoPersonalCommand { get; set; }
         public ICommand MostrarAvisosPersonalesMaestroCommand { get; set; }
         public ICommand MostrarAvisosPersonalesAlumnoCommand { get; set; }
+
+        public ICommand MostrarEliminarCommand { get; set; }
+
+        public ICommand EliminarCommand { get; set; }
+
+        public ICommand CerrarEliminarCommand { get; set; }
 
 
 
@@ -75,18 +88,65 @@ namespace AvisosEscolares.Viewmodels
         {
             LoginCommand = new Command(Login);
             MostrarAvisosGeneralesMaestroCommand = new Command(MostrarAvisosGeneralesMaestro);
-            MostrarAvisosPersonalesMaestroCommand = new Command<int>(MostrarAvisosPersonalesMaestro);
-            MostrarCrearAvisoPersonalCommand=new Command<int>(MostrarCrearAvisoPersonal);
+            MostrarAvisosPersonalesMaestroCommand = new Command<AlumnoDetallesListaDTO>(MostrarAvisosPersonalesMaestro);
+            MostrarCrearAvisoPersonalCommand = new Command<AlumnoDetallesListaDTO>(MostrarCrearAvisoPersonal);
             CambiarVistaCommand = new Command<string>(CambiarVista);
             CrearAvisoGeneralCommand = new Command(CrearAvisoGeneral);
             CrearAvisoPersonalCommand = new Command(CrearAvisoPersonal);
             VerListaAlumnosCommand = new Command(VerListaAlumnos);
             AgregarAlumnoCommand = new Command(AgregarAlumno);
             MostrarAvisosPersonalesAlumnoCommand = new Command<string>(MostrarAvisosAlumno);
-            VerAvisoPersonalAlumnoCommand= new Command<int>(VerAvisoPersonalAlumno);
-            VerAvisoGeberalAlumnoCommand= new Command<int>(VerAvisoGeneralAlumno);
+            VerAvisoPersonalAlumnoCommand = new Command<int>(VerAvisoPersonalAlumno);
+            VerAvisoGeberalAlumnoCommand = new Command<int>(VerAvisoGeneralAlumno);
             VerDashboardAlumnoCommand = new Command<string>(VerDashboardAlumno);
+            CerrarErrorInternetCommand = new Command(CerrarErrorInternet);
+            MostrarEliminarCommand=new Command<int>(MostrarEliminar);
+            EliminarCommand=new Command<string>(Eliminar);
+            CerrarEliminarCommand = new Command(CerrarEliminar);
+            
 
+            service.ErrorInternet += Service_ErrorInternet;
+
+        }
+
+        private void CerrarEliminar()
+        {
+            VistaEliminar = false;
+            PropertyChanged?.Invoke(this, new(nameof(VistaEliminar)));
+        }
+
+        private void Eliminar(string tipo)
+        {
+            if (tipo == "Alumno")
+            {
+                service.EliminarAlumno(ElementoEliminar);
+                VerListaAlumnos();
+
+            }
+            else
+            {
+                service.EliminarAviso(ElementoEliminar);
+                MostrarAvisosPersonalesMaestro(AlumnoSeleccionado);
+            }
+        }
+
+        private void MostrarEliminar(int id)
+        {
+            ElementoEliminar=id;
+            VistaEliminar=true;
+            PropertyChanged?.Invoke(this, new(nameof(VistaEliminar)));
+        }
+
+        private void CerrarErrorInternet()
+        {
+            VistaErrorInternet = false;
+            PropertyChanged?.Invoke(this, new(nameof(VistaErrorInternet)));
+        }
+
+        private void Service_ErrorInternet()
+        {
+            VistaErrorInternet = true;
+            PropertyChanged?.Invoke(this, new(nameof(VistaErrorInternet)));
         }
 
         private async void VerAvisoGeneralAlumno(int idaviso)
@@ -103,13 +163,14 @@ namespace AvisosEscolares.Viewmodels
             }
         }
 
-        
+
 
         private void VerDashboardAlumno(string lista)
         {
             if (lista == "Personal")
             {
                 ActualizarListaPersonalLocal();
+                
             }
             else
             {
@@ -131,13 +192,13 @@ namespace AvisosEscolares.Viewmodels
             }
         }
 
-       
-      
+
+
         private void ActualizarListaPersonalLocal()
         {
-            foreach(var aviso in ListaAvisosPersonales)
+            foreach (var aviso in ListaAvisosPersonales)
             {
-                if(aviso.Estado == "Nuevo")
+                if (aviso.Estado == "Nuevo")
                 {
                     aviso.Estado = "Recibido";
                 }
@@ -150,7 +211,7 @@ namespace AvisosEscolares.Viewmodels
             {
                 avisoSeleccionado.Estado = "Leído";
             }
-            CantAvisosPersonalesNuevos =ListaAvisosPersonales.Where(a => a.Estado == "Nuevo").Count();
+            CantAvisosPersonalesNuevos = ListaAvisosPersonales.Where(a => a.Estado == "Nuevo").Count();
             PropertyChanged?.Invoke(this, new(nameof(CantAvisosPersonalesNuevos)));
             Shell.Current.GoToAsync("dashboardAlumno");
 
@@ -186,7 +247,7 @@ namespace AvisosEscolares.Viewmodels
             ListaAvisosPersonales.Clear();
             if (lista == "Generales")
             {
-               
+
                 var avisosGenerales = await service.ObtenerAvisosGeneralesPorAlumno();
                 foreach (var aviso in avisosGenerales)
                 {
@@ -198,7 +259,7 @@ namespace AvisosEscolares.Viewmodels
 
                 var avisosPerosnales = await service.ObtenerAvisosPersonalesAlumno();
                 CantAvisosPersonalesNuevos = avisosPerosnales.Where(a => a.Estado == "Nuevo").Count();
-            
+
                 PropertyChanged?.Invoke(this, new(nameof(CantAvisosPersonalesNuevos)));
                 await service.MarcarAvisosPersonalesLeidos(avisosNuevos, alumno.Id);
 
@@ -208,7 +269,7 @@ namespace AvisosEscolares.Viewmodels
             else
             {
 
-                
+
                 var avisos = await service.ObtenerAvisosPersonalesAlumno();
 
                 foreach (var aviso in avisos)
@@ -220,7 +281,7 @@ namespace AvisosEscolares.Viewmodels
                 PropertyChanged?.Invoke(this, new(nameof(CantAvisosPersonalesNuevos)));
                 var avisosGenerales = await service.ObtenerAvisosGeneralesPorAlumno();
                 CantAvisosGeneralesNuevos = avisosGenerales.Where(a => a.Estado == "Nuevo").Count();
-                
+
                 PropertyChanged?.Invoke(this, new(nameof(CantAvisosGeneralesNuevos)));
 
 
@@ -231,34 +292,38 @@ namespace AvisosEscolares.Viewmodels
 
         }
 
-       
-        
-            
-        
-        
 
-        private async void MostrarCrearAvisoPersonal(int idAlumno)
+
+
+
+
+
+        private async void MostrarCrearAvisoPersonal(AlumnoDetallesListaDTO idAlumno)
         {
             AlumnoSeleccionado = idAlumno;
-            NuevoAvisoPersonal.AlumnoId = AlumnoSeleccionado;
+            NuevoAvisoPersonal.AlumnoId = AlumnoSeleccionado.Id;
             await Shell.Current.GoToAsync("crearAvisoPersonal");
         }
 
-        private async void MostrarAvisosPersonalesMaestro(int idAlumno)
+        private async void MostrarAvisosPersonalesMaestro(AlumnoDetallesListaDTO idAlumno)
         {
-           AvisosPersonales.Clear();
-            var avisos = await service.ObtenerAvisosPersonalesPorAlumno(idAlumno);
+            AvisosPersonales.Clear();
+            var avisos = await service.ObtenerAvisosPersonalesPorAlumno(idAlumno.Id);
             foreach (var aviso in avisos)
             {
                 AvisosPersonales.Add(aviso);
             }
-             await Shell.Current.GoToAsync("avisosPersonalesMaestro");
+            await Shell.Current.GoToAsync("avisosPersonalesMaestro");
+            AlumnoSeleccionado = idAlumno;
+            PropertyChanged?.Invoke(this, new(nameof(AlumnoSeleccionado)));
         }
 
         private async void CrearAvisoPersonal()
         {
+            isLoading = true;
+            PropertyChanged?.Invoke(this, new(nameof(isLoading)));
             NuevoAvisoPersonal.MaestroId = (int)maestro.Id;
-            NuevoAvisoPersonal.AlumnoId = AlumnoSeleccionado;
+            NuevoAvisoPersonal.AlumnoId = AlumnoSeleccionado.Id;
             var error = await service.CrearAvisoPersonal(NuevoAvisoPersonal);
             if (error != null)
             {
@@ -269,15 +334,16 @@ namespace AvisosEscolares.Viewmodels
             {
                 VerListaAlumnos();
             }
-           
+            isLoading = false;
+            PropertyChanged?.Invoke(this, new(nameof(isLoading)));
         }
-       
+
 
         private async void AgregarAlumno()
         {
             NuevoAlumno.GrupoId = (int)maestro.GrupoId;
             NuevoAlumno.Contrasena = "ESCOLARES";
-            var error=await service.CrearAlumno(NuevoAlumno);
+            var error = await service.CrearAlumno(NuevoAlumno);
             if (error != null)
             {
                 Error = error;
@@ -287,24 +353,24 @@ namespace AvisosEscolares.Viewmodels
             {
                 VerListaAlumnos();
             }
-                
+
         }
 
         private async void VerListaAlumnos()
         {
             ListaAlumnos.Clear();
             var alumnos = await service.GetAlumnosByGrupo((int)maestro.GrupoId);
-            
+
             foreach (var a in alumnos)
             {
-              ListaAlumnos.Add(a);
+                ListaAlumnos.Add(a);
             }
             await Shell.Current.GoToAsync("listaAlumnos");
         }
 
         private async void CrearAvisoGeneral()
         {
-            var error=await service.CrearAvisoGeneral(NuevoAvisoGeneral);
+            var error = await service.CrearAvisoGeneral(NuevoAvisoGeneral);
             if (error != null)
             {
                 Error = error;
@@ -314,7 +380,7 @@ namespace AvisosEscolares.Viewmodels
             {
                 MostrarAvisosGeneralesMaestro();
             }
-                
+
 
         }
 
@@ -359,7 +425,7 @@ namespace AvisosEscolares.Viewmodels
                     await Shell.Current.GoToAsync("dashboardMaestro");
                 }
             }
-            else if(result.error != null)
+            else if (result.error != null)
             {
                 Error = result.error;
                 PropertyChanged?.Invoke(this, new(nameof(Error)));
@@ -371,7 +437,7 @@ namespace AvisosEscolares.Viewmodels
 
         }
 
-       
+
 
 
     }

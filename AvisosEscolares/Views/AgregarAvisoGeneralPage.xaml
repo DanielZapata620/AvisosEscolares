@@ -45,6 +45,8 @@
 
                         </Border>
                         <Label FontSize="14" Margin="0,20,0,20" TextColor="Red" Grid.Row="2" Text="{Binding Error}" HorizontalTextAlignment="Center"
+                                HorizontalOptions="Center" LineBreakMode="WordWrap"></Label>
+                        <Label FontSize="14" Margin="0,20,0,20" TextColor="Red" Grid.Row="2" Text="{Binding Error}" HorizontalTextAlignment="Center"
    HorizontalOptions="Center"
    LineBreakMode="WordWrap" 
 ></Label>
@@ -63,7 +65,6 @@
                     BorderWidth="1" CornerRadius="15" HeightRequest="60"></Button>
 
                 </VerticalStackLayout>
-
             </VerticalStackLayout>
         </ScrollView>
 
