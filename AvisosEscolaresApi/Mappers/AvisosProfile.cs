@@ -32,7 +32,7 @@ namespace AvisosEscolaresApi.Mappers
             .ForMember(d => d.Mensaje, o => o.MapFrom(s => s.Aviso.Mensaje))
             .ForMember(d => d.FechaLeido, o => o.MapFrom(s => s.FechaLeido))
 
-            // 🔥 ESTADO PERSONALIZADO
+           
             .ForMember(d => d.Estado, o => o.MapFrom(s =>
                 s.Estado.Nombre == "Nuevo" ? "Sin Ver" :
                 s.Estado.Nombre == "Recibido" ? "Visto" :
@@ -40,7 +40,7 @@ namespace AvisosEscolaresApi.Mappers
                 "Sin Ver"
             ))
 
-            // 🔥 MAESTRO (aquí está lo que preguntaste)
+          
 
             ;
 
@@ -49,12 +49,12 @@ namespace AvisosEscolaresApi.Mappers
             .ForMember(d => d.Titulo, o => o.MapFrom(s => s.Aviso.Titulo))
             .ForMember(d => d.Mensaje, o => o.MapFrom(s => s.Aviso.Mensaje))
             .ForMember(d => d.FechaLeido, o => o.MapFrom(s => s.FechaLeido))
-
-            // 🔥 ESTADO PERSONALIZADO
+            .ForMember(d => d.FechaCreacion, o => o.MapFrom(s => s.Aviso.FechaCreacion))
+        
             .ForMember(d => d.Estado, o => o.MapFrom(s =>
                 s.Estado.Nombre ))
 
-            // 🔥 MAESTRO (aquí está lo que preguntaste)
+          
             .ForMember(d => d.Maestro, o => o.MapFrom(s =>
                 s.Aviso.Avisopersonal.Maestro.Nombre
             ));
@@ -66,11 +66,11 @@ namespace AvisosEscolaresApi.Mappers
             .ForMember(d => d.Mensaje, o => o.MapFrom(s => s.Aviso.Mensaje))
             .ForMember(d => d.FechaLeido, o => o.MapFrom(s => s.FechaLeido))
 
-            // 🔥 ESTADO PERSONALIZADO
+           
             .ForMember(d => d.Estado, o => o.MapFrom(s =>
                 s.Estado.Nombre))
 
-            // 🔥 MAESTRO (aquí está lo que preguntaste)
+            
             .ForMember(d => d.Maestro, o => o.MapFrom(s =>
                 s.Aviso.Avisopersonal.Maestro.Nombre
             ));
@@ -82,7 +82,8 @@ namespace AvisosEscolaresApi.Mappers
             .ForMember(d => d.FechaLeido, o => o.MapFrom(s => s.FechaLeido))
             .ForMember(d => d.Estado, o => o.MapFrom(s =>
                 s.Estado.Nombre))
-            .ForMember(d => d.FechaCaducidad, o => o.MapFrom(s => s.Aviso.Avisogeneral.FechaCaducidad));
+            .ForMember(d => d.FechaCaducidad, o => o.MapFrom(s => s.Aviso.Avisogeneral.FechaCaducidad))
+            .ForMember(d => d.FechaCreacion, o => o.MapFrom(s => s.Aviso.FechaCreacion));
 
         }
 

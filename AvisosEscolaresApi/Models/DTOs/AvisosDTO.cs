@@ -37,12 +37,14 @@
         public string Estado { get; set; }
         public DateTime? FechaLeido { get; set; }
 
+
         
     }
 
     public class AvisoPersonalListaAlumnoDTO:AvisoPersonalDetallesMaestroDTO
     {
       public string Maestro { get; set; }
+      public DateTime? FechaCreacion { get; set; }
 
     }
 
@@ -60,6 +62,8 @@
         public string Estado { get; set; }
 
         public DateTime? FechaLeido { get; set; }
+
+        public DateTime? FechaCreacion { get; set; }
 
         public DateTime FechaCaducidad { get; set; }
     }
