@@ -9,6 +9,8 @@ public partial class Avisopersonal
 
     public int MaestroId { get; set; }
 
+    public ulong Eliminado { get; set; }
+
     public virtual Aviso Aviso { get; set; } = null!;
 
     public virtual Maestro Maestro { get; set; } = null!;

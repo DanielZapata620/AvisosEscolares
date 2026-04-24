@@ -128,6 +128,13 @@ namespace AvisosEscolaresApi.Controllers
             return Ok();
         }
 
-
+        [HttpDelete("borrarpersonal/{id}")]
+        [Authorize(Roles = "Maestro")]
+        public IActionResult EliminarAvisoPersonal(int id)
+        {
+         
+            Service.EliminarAvisoPersonal(id);
+            return Ok("Aviso personal eliminado correctamente");
+        }
     }
 }

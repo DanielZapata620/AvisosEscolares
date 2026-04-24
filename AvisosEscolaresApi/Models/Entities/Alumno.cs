@@ -15,6 +15,8 @@ public partial class Alumno
 
     public string Contrasena { get; set; } = null!;
 
+    public sbyte Eliminado { get; set; }
+
     public virtual ICollection<Avisoalumnoestado> Avisoalumnoestado { get; set; } = new List<Avisoalumnoestado>();
 
     public virtual Grupo Grupo { get; set; } = null!;

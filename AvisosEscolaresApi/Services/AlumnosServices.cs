@@ -25,7 +25,7 @@ namespace AvisosEscolaresApi.Services
 
         public List<AlumnoDetallesListaDTO> ObtenerAlumnosByGrupo(int grupoId)
         {
-            var alumnos = RepoAlumno.GetAll().Where(a => a.GrupoId == grupoId);
+            var alumnos = RepoAlumno.GetAll().Where(a => a.GrupoId == grupoId && a.Eliminado == 0).OrderBy(x=>x.Nombre);
 
             if(alumnos.Any(a => a.GrupoId != grupoId))
                 throw new UnauthorizedAccessException();
@@ -55,6 +55,18 @@ namespace AvisosEscolaresApi.Services
 
            
             
+        }
+
+        public void EliminarAlumno(int id)
+        {
+            var alumno = RepoAlumno.Query()
+                .FirstOrDefault(a => a.Id == id);
+
+            if (alumno != null)
+            {
+                alumno.Eliminado = 1;
+                RepoAlumno.Update(alumno);
+            }
         }
 
     }

@@ -61,5 +61,14 @@ namespace AvisosEscolaresApi.Controllers
             }
 
         }
+
+        [HttpDelete("alumno/{id}")]
+        [Authorize(Roles = "Maestro")]
+        public IActionResult EliminarAlumno(int id)
+        {
+            Service.EliminarAlumno(id);
+            return Ok(new { mensaje = "Alumno eliminado correctamente" });
+        }
+
     }
 }

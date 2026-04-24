@@ -46,9 +46,10 @@ namespace AvisosEscolaresApi.Services
 
 
 
+
         public List<AvisoPersonalDetallesMaestroDTO> ObtenerAvisosPersonales(int id)
         {
-            var avisos = EstadoRepo.Query().Include(x => x.Aviso).Include(x => x.Estado).Where(x => x.AlumnoId == id && x.Aviso.TipoAvisoId==2);
+            var avisos = EstadoRepo.Query().Include(x => x.Aviso).Include(x => x.Estado).Where(x => x.AlumnoId == id && x.Aviso.TipoAvisoId==2 && x.Aviso.Avisopersonal.Eliminado==0);
             return avisos.Select(a => Mapper.Map<AvisoPersonalDetallesMaestroDTO>(a)).ToList();
         }
 
@@ -196,5 +197,22 @@ namespace AvisosEscolaresApi.Services
             // 6. AutoMapper
             return Mapper.Map<List<AvisoGeneralListaAlumnoDTO>>(resultado);
         }
+
+
+        public void EliminarAvisoPersonal(int id)
+        {
+            var avisoPersonal = EstadoRepo.Query().Include(x=>x.Aviso).ThenInclude(x=>x.Avisopersonal)
+                .Include(x => x.Aviso)
+                .FirstOrDefault(x => x.Id == id);
+
+            if (avisoPersonal != null)
+            {
+                avisoPersonal.Aviso.Avisopersonal.Eliminado = 1;
+                EstadoRepo.Update(avisoPersonal);
+
+               
+            }
+        }
+
     }
 }
