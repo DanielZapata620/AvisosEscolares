@@ -25,33 +25,6 @@ namespace AvisosEscolaresApi.Controllers
         public AlumnosServices AlumnosService { get; }
         public MaestrosService MaestrosService { get; }
 
-        //[HttpGet]
-        //[Authorize]
-        //public IActionResult GetUsuario()
-        //{
-        //    int.TryParse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value, out int idUsuario);
-        //    var rol = User.FindFirst(ClaimTypes.Role)?.Value;
-
-        //    if (idUsuario == null || rol == null)
-        //        return Unauthorized();
-
-            
-
-        //    if (rol == "Alumno")
-        //    {
-        //        var alumno = AlumnosService.ObtenerAlumnoById(idUsuario);
-        //        return Ok(alumno);
-        //    }
-        //    else if (rol == "Maestro")
-        //    {
-        //        var maestro = MaestrosService.ObtenerMaestroById(idUsuario);
-        //        return Ok(maestro);
-        //    }
-
-        //    return Unauthorized();
-        //}
-
-
         [HttpPost]
         public IActionResult Login(LoginDTO dto)
         {

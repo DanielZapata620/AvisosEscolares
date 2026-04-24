@@ -37,7 +37,7 @@ namespace AvisosEscolaresApi.Services
             var maestro = RepoMaestro.Query().Include(g=>g.Grupo)
                 .FirstOrDefault(m =>
                     m.ClaveAcceso == dto.Usuario &&
-                    m.Contrasena == dto.Contrasena);
+                    m.Contrasena == dto.Contrasena );
 
             if (maestro != null)
             {
@@ -61,7 +61,7 @@ namespace AvisosEscolaresApi.Services
                 var alumno = RepoAlumno.Query().Include(g => g.Grupo).Include(m => m.Grupo.Maestro)
                     .FirstOrDefault(a =>
                         a.Usuario == dto.Usuario &&
-                        a.Contrasena == dto.Contrasena);
+                        a.Contrasena == dto.Contrasena && a.Eliminado==0);
                 if (alumno != null)
                 {
 
@@ -91,7 +91,7 @@ namespace AvisosEscolaresApi.Services
 
                 issuer: Configuration.GetValue<string>("Jwt:Issuer"),
                 audience: Configuration.GetValue<string>("Jwt:Audience"),
-                expires: DateTime.UtcNow.AddMinutes(5),
+                expires: DateTime.UtcNow.AddMinutes(60),
                 claims: claims,
                 signingCredentials: new SigningCredentials(
                     new SymmetricSecurityKey(Encoding.UTF8.GetBytes(key ?? "")),
