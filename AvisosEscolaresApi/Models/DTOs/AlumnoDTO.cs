@@ -27,11 +27,5 @@
         public string Usuario { get; set; } = null!;
         public string Contrasena { get; set; } = null!;
     }
-    // public class AlumnoUpdateDTO
-    //{
-    //    public string Nombre { get; set; } = null!;
-    //    public int GrupoId { get; set; }
-    //    public string Usuario { get; set; } = null!;
-    //    public string Contrasena { get; set; } = null!;
-    //}
+   
 }

@@ -44,21 +44,7 @@ namespace AvisosEscolaresApi.Services
 
         public void CrearAlumno(AlumnoCreateDTO dto)
         {
-            //// 1️⃣ VALIDAR DTO
-            //var result = AgregarValidator.Validate(dto);
-
-            //if (!result.IsValid)
-            //{
-
-            //    throw new ValidationException(result.Errors);
-            //}
-
-            //// 2️⃣ VERIFICAR QUE EL GRUPO EXISTE
-            ////var grupo = _grupoRepo.Get(dto.GrupoId);
-            ////if (grupo == null)
-            ////    throw new Exception("El grupo especificado no existe.");
-
-            //// 3️⃣ CREAR ENTIDAD
+            
             var alumno = Mapper.Map<Alumno>(dto);
            
             RepoAlumno.Insert(alumno);
